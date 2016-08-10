@@ -1,4 +1,3 @@
-# Ignore Play! working directory #
 bin/
 /db
 .eclipse
@@ -13,4 +12,4 @@ server.pid
 *.eml
 /dist/
 .cache
-.idea/ # ignore intellij settings
+.idea
