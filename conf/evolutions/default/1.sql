@@ -1,13 +1,11 @@
-# User schema
-
 # --- !Ups
-create table `link` (
-  `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  `url` TEXT NOT NULL,
-  `name` TEXT NOT NULL,
-  `description` TEXT,
-  `screenshot` BLOB
-)
-
+CREATE TABLE link (
+  id          SERIAL NOT NULL PRIMARY KEY,
+  url         TEXT   NOT NULL,
+  name        TEXT   NOT NULL,
+  description TEXT,
+  screenshot  BYTEA
+); --
+--
 # --- !Downs
-drop table `link`
+DROP TABLE IF EXISTS link; --

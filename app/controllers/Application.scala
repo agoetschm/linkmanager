@@ -32,9 +32,11 @@ class Application @Inject()(val linkDAO: LinkDAO, val messagesApi: MessagesApi) 
           url = successData.url,
           name = successData.name,
           description = successData.description,
-          screenshot = None)) map { newId =>
-          Logger.debug("new link with id " + newId)
-          Redirect(routes.Application.index())
+          screenshot = Some(Array.emptyByteArray)) // TODO None does not work
+        ) map {
+          newId =>
+            Logger.debug("new link with id " + newId)
+            Redirect(routes.Application.index())
         }
       }
     )

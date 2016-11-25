@@ -1,7 +1,6 @@
 package models
 
 import java.awt.Image
-import java.sql.Blob
 
 import play.api.data.Form
 import play.api.data.Forms._
@@ -12,7 +11,7 @@ import slick.driver.MySQLDriver.api._
 /**
   * Created by agoetschm on 8/3/16.
   */
-case class Link(id: Long, url: String, name: String, description: Option[String], screenshot: Option[Image])
+case class Link(id: Long, url: String, name: String, description: Option[String], screenshot: Option[Array[Byte]])
 
 case class LinkFromData(url: String, name: String, description: Option[String])
 
@@ -44,13 +43,17 @@ class LinkTableDef(tag: Tag) extends Table[Link](tag, "link") {
 
   def description = column[Option[String]]("description")
 
-  def screenshot = column[Option[Blob]]("screenshot")
+  def screenshot = column[Option[Array[Byte]]]("screenshot")
 
   override def * =
-    (id, url, name, description, screenshot) <>[Link, (Long, String, String, Option[String], Option[Blob])]( {
-      case ((id, url, name, descr, image)) => Link(id, url, name, descr, None)
-    }, {
-      case Link(i, u, n, d, im) => Option((i, u, n, d, None))
-    })
+    (id, url, name, description, screenshot) <> (Link.tupled, Link.unapply)
+
+  //  <>[Link, (Long, String, String, Option[String], Option[Blob])]( {
+  //    case ((id, url, name, descr, image)) => Link(id, url, name, descr, None)
+  //  }, {
+  //    case Link(i, u, n, d, im) => Option((i, u, n, d, None))
+  //  })
+
+  //
 }
 

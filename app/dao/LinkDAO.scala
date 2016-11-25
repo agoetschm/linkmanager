@@ -4,8 +4,6 @@ import com.google.inject.Inject
 import models.{Link, LinkTableDef}
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import slick.driver.JdbcProfile
-import slick.lifted.TableQuery
-import slick.driver.MySQLDriver.api._
 import scala.concurrent.ExecutionContext.Implicits.global
 
 import scala.concurrent.Future
@@ -17,10 +15,12 @@ import scala.concurrent.Future
 class LinkDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
   extends HasDatabaseConfigProvider[JdbcProfile] {
 
+  import dbConfig.driver.api._
+
   val links = TableQuery[LinkTableDef]
 
   def add(l: Link): Future[Long] = {
-    dbConfig.db.run(links returning links.map(_.id) += l).recover{
+    dbConfig.db.run(links returning links.map(_.id) += l).recover {
       case e: Exception => -1
     }
   }
