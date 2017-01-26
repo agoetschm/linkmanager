@@ -1,0 +1,2 @@
+- set database
+- set app secret
