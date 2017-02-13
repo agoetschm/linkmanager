@@ -1,2 +1,3 @@
 - set database
 - set app secret
+- materialize : get via https not http
