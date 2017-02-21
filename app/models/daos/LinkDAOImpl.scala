@@ -1,4 +1,4 @@
-package dao
+package models.daos
 
 import com.google.inject.Inject
 import models.{Link, LinkTableDef}
@@ -9,11 +9,10 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 /**
-  * Created by agoetschm on 8/4/16.
+  * Implementation of the link dao
   */
-
-class LinkDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
-  extends HasDatabaseConfigProvider[JdbcProfile] {
+class LinkDAOImpl @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
+  extends LinkDAO with HasDatabaseConfigProvider[JdbcProfile] {
 
   import dbConfig.driver.api._
 

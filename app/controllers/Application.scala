@@ -2,7 +2,7 @@ package controllers
 
 
 import com.google.inject.Inject
-import dao.LinkDAO
+import models.daos.LinkDAO
 import models.{Link, LinkForm}
 import play.api.Logger
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -12,9 +12,12 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 /**
-  * Created by agoetschm on 8/3/16.
+  * Home controller
   */
-class Application @Inject()(val linkDAO: LinkDAO, val messagesApi: MessagesApi) extends Controller with I18nSupport {
+class Application @Inject()
+(val linkDAO: LinkDAO, val messagesApi: MessagesApi)
+  extends Controller with I18nSupport {
+
   def index = Action.async { implicit req =>
     linkDAO.listAll map { links =>
       Ok(views.html.index(LinkForm.form, links))

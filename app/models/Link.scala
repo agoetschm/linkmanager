@@ -4,16 +4,17 @@ import java.awt.Image
 
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.data.validation.{Invalid, Valid, Constraint}
-import slick.driver.MySQLDriver.api._
+import play.api.data.validation.{Constraint, Invalid, Valid}
+
+import slick.driver.PostgresDriver.api._
 
 
 /**
-  * Created by agoetschm on 8/3/16.
+  * Link model
   */
 case class Link(id: Long, url: String, name: String, description: Option[String], screenshot: Option[Array[Byte]])
 
-case class LinkFromData(url: String, name: String, description: Option[String])
+case class LinkData(url: String, name: String, description: Option[String])
 
 object LinkForm {
   private val urlRegex = "(^|[\\s.:;?\\-\\]<\\(])(https?://[-\\w;/?:@&=+$\\|\\_.!~*\\|'()\\[\\]%#,☺]+[\\w/#](\\(\\))?)(?=$|[\\s',\\|\\(\\).:;?\\-\\[\\]>\\)])"
@@ -30,7 +31,7 @@ object LinkForm {
       "url" -> nonEmptyText.verifying(urlContraint),
       "name" -> nonEmptyText,
       "description" -> optional(text)
-    )(LinkFromData.apply)(LinkFromData.unapply)
+    )(LinkData.apply)(LinkData.unapply)
   )
 }
 

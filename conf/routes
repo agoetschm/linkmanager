@@ -7,5 +7,8 @@ GET         /                      controllers.Application.index
 POST        /addLink               controllers.Application.addLink
 GET         /deleteLink/:id        controllers.Application.deleteLink(id: Long)
 
+GET         /login                 controllers.LogIn.view
+POST        /login                 controllers.LogIn.submit
+
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file          controllers.Assets.versioned(path="/public", file: Asset)

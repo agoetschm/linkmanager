@@ -1,9 +1,9 @@
-@(linkForm: Form[models.LinkFromData], links: Seq[Link])(implicit messages: Messages, request: RequestHeader)
+@(linkForm: Form[models.LinkData], links: Seq[Link])(implicit messages: Messages, request: RequestHeader)
 
 @import helper._
 @import views.FormHelper._
 
-@main("Home") {
+@main("Home", Home) {
     <div class="container row">
         <div class="col l7 m12">
             @*<h4>Links</h4>*@
