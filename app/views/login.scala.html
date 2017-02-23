@@ -1,4 +1,4 @@
-@(userForm: Form[models.UserLogInData])(implicit messages: Messages, request: RequestHeader)
+@(userForm: Form[models.UserLogInData])(implicit messages: Messages, request: RequestHeader, flash: Flash)
 
 @import helper._
 @import views.FormHelper._
@@ -8,6 +8,10 @@
         <div class="col l6 offset-l3 m8 offset-m2 s12">
             <div class="card-panel">
                 <h5 class="center">Log in</h5>
+                
+                @flash.get("error").getOrElse("")
+                
+                
                 @form(action = routes.LogIn.submit()) {
                     @inputText(userForm("username"), '_label -> "Username", 'required -> "true",
                         'class -> "validate", '_showConstraints -> false)

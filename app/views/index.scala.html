@@ -1,49 +1,55 @@
-@(linkForm: Form[models.LinkData], links: Seq[Link])(implicit messages: Messages, request: RequestHeader)
+@(linkForm: Form[models.LinkData], links: Seq[Link], maybeUser: Option[User])(implicit messages: Messages, request: RequestHeader)
 
-@import helper._
-@import views.FormHelper._
+    @import helper._
+    @import views.FormHelper._
 
-@main("Home", Home) {
-    <div class="container row">
-        <div class="col l7 m12">
-            @*<h4>Links</h4>*@
-            <table class="striped">
-                <thead>
-                    <tr>
-                        @*<th>id</th>*@
-                        <th>Link</th>
-                        <th>Description</th>
-                    </tr>
-                </thead>
-                <tbody>
-                @for(l <- links) {
-                    <tr>
-                        @*<td>@l.id</td>*@
-                    <td><a href="@l.url">@l.name</a></td>
-                    <td>@l.description</td>
-                    <td><a class="btn-flat right waves-effect" href="@routes.Application.deleteLink(l.id)">
-                        <i class="material-icons">delete</i></a>
-                    </td>
-                    </tr>
-                }
-                </tbody>
-            </table>
-        </div>
-
-        <div class="col l5 m8 offset-m2 s12">
-            <div class="card-panel">
-                <h5 class="center">New link</h5>
-                @form(action = routes.Application.addLink) {
-                    @inputText(linkForm("url"), '_label -> "URL", 'type -> "url", 'required -> "true",
-                        'class -> "validate", '_showConstraints -> false)
-                    @inputText(linkForm("name"), '_label -> "Name", 'required -> "true",
-                        'class -> "validate", '_showConstraints -> false)
-                    @inputText(linkForm("description"), '_label -> "Small description")
-
-                    <div class="center"> <button class="btn waves-effect" type="submit">Add</button></div>
-                }
+    @main("Home", Home) {
+        <div class="container row">
+            <div class="col l7 m12">
+                @*<h4>Links</h4>*@
+                <table class="striped">
+                    <thead>
+                        <tr>
+                            @*<th>id</th>*@
+                            <th>Link</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @for(l <- links) {
+                        <tr>
+                            @*<td>@l.id</td>*@
+                        <td><a href="@l.url">@l.name</a></td>
+                        <td>@l.description</td>
+                        <td><a class="btn-flat right waves-effect" href="@routes.Application.deleteLink(l.id)">
+                            <i class="material-icons">delete</i></a>
+                        </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
             </div>
-        </div>
-    </div>
 
-}
+            <div class="col l5 m8 offset-m2 s12">
+                <div class="card-panel">
+                    <h5 class="center">New link</h5>
+                    @form(action = routes.Application.addLink) {
+                        @inputText(linkForm("url"), '_label -> "URL", 'type -> "url", 'required -> "true",
+                            'class -> "validate", '_showConstraints -> false)
+                        @inputText(linkForm("name"), '_label -> "Name", 'required -> "true",
+                            'class -> "validate", '_showConstraints -> false)
+                        @inputText(linkForm("description"), '_label -> "Small description")
+
+                        <div class="center"> <button class="btn waves-effect" type="submit">Add</button></div>
+                    }
+                </div>
+            </div>
+            @{
+                maybeUser match {
+                    case Some(user) => user.username
+                    case None => "Guest"
+                }
+            }
+        </div>
+
+    }
