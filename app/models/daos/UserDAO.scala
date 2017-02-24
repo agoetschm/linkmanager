@@ -10,5 +10,6 @@ import scala.concurrent.Future
   */
 trait UserDAO {
   def find(loginInfo: LoginInfo): Future[Option[User]]
-
+  
+  def save(user: User): Future[User]
 }

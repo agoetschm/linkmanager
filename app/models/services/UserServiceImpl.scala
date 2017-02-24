@@ -11,4 +11,6 @@ import scala.concurrent.Future
   */
 class UserServiceImpl @Inject() (userDAO: UserDAO) extends UserService{
   override def retrieve(loginInfo: LoginInfo): Future[Option[User]] = userDAO.find(loginInfo)
+
+  override def create(user: User): Future[User] = userDAO.save(user)
 }

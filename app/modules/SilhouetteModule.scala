@@ -32,8 +32,7 @@ import play.api.Configuration
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.openid.OpenIdClient
 import play.api.libs.ws.WSClient
-//import utils.auth.{CustomSecuredErrorHandler, CustomUnsecuredErrorHandler, DefaultEnv}
-import utils.auth.DefaultEnv
+import utils.auth.{CustomSecuredErrorHandler, CustomUnsecuredErrorHandler, DefaultEnv}
 
 /**
   * The Guice module which wires all Silhouette dependencies.
@@ -45,8 +44,8 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
     */
   def configure() {
     bind[Silhouette[DefaultEnv]].to[SilhouetteProvider[DefaultEnv]]
-//    bind[UnsecuredErrorHandler].to[CustomUnsecuredErrorHandler]
-//    bind[SecuredErrorHandler].to[CustomSecuredErrorHandler]
+    bind[UnsecuredErrorHandler].to[CustomUnsecuredErrorHandler]
+    bind[SecuredErrorHandler].to[CustomSecuredErrorHandler]
     bind[UserService].to[UserServiceImpl]
     bind[UserDAO].to[UserDAOImpl]
     bind[CacheLayer].to[PlayCacheLayer]
@@ -58,7 +57,7 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
 
     // Replace this with the bindings to your concrete DAOs
 //    bind[DelegableAuthInfoDAO[PasswordInfo]].toInstance(new InMemoryAuthInfoDAO[PasswordInfo])
-    bind[DelegableAuthInfoDAO[PasswordInfo]].to[PasswordInfoDAOImpl]
+    bind[DelegableAuthInfoDAO[PasswordInfo]].to[PasswordInfoDAO]
     bind[DelegableAuthInfoDAO[OAuth1Info]].toInstance(new InMemoryAuthInfoDAO[OAuth1Info])
     bind[DelegableAuthInfoDAO[OAuth2Info]].toInstance(new InMemoryAuthInfoDAO[OAuth2Info])
     bind[DelegableAuthInfoDAO[OpenIDInfo]].toInstance(new InMemoryAuthInfoDAO[OpenIDInfo])

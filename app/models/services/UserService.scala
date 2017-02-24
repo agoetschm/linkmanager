@@ -10,4 +10,5 @@ import scala.concurrent.Future
   * Created by agoetschm on 2/21/17.
   */
 trait UserService extends IdentityService[User] {
+  def create(user: User) : Future[User]
 }

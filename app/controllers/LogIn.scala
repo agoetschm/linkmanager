@@ -25,7 +25,7 @@ class LogIn @Inject()(
                        val messagesApi: MessagesApi)
   extends Controller with I18nSupport {
 
-  def view = Action { implicit request =>
+  def view = silhouette.UnsecuredAction{ implicit request =>
     Ok(views.html.login(UserLogInForm.form))
   }
 
@@ -49,7 +49,7 @@ class LogIn @Inject()(
           }
         }.recover {
           case e: ProviderException =>
-            Redirect(routes.LogIn.view()).flashing("error" -> "Invalid credentials")
+            Redirect(routes.LogIn.view()).flashing("error" -> "Invalid credentials.")
         }
       }
     )
