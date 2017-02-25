@@ -47,10 +47,11 @@ class LogIn @Inject()(
               }
             case None => Future.failed(new IdentityNotFoundException("Couldn't find user"))
           }
-        }.recover {
-          case e: ProviderException =>
-            Redirect(routes.LogIn.view()).flashing("error" -> "Invalid credentials.")
         }
+//          .recover {
+//          case e: ProviderException =>
+//            Redirect(routes.LogIn.view()).flashing("error" -> "Invalid credentials.")
+//        }
       }
     )
   }

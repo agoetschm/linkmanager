@@ -37,19 +37,10 @@ object UserSignUpForm {
   )
 }
 
+class UserTableDef(tag: Tag) extends Table[User](tag, "users") {
+  def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
 
-//class LinkTableDef(tag: Tag) extends Table[Link](tag, "link") {
-//  def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
-//
-//  def url = column[String]("url")
-//
-//  def name = column[String]("name")
-//
-//  def description = column[Option[String]]("description")
-//
-//  def screenshot = column[Option[Array[Byte]]]("screenshot")
-//
-//  override def * =
-//    (id, url, name, description, screenshot) <> (Link.tupled, Link.unapply)
-//}
+  def username = column[String]("username")
 
+  override def * = (id, username) <> (User.tupled, User.unapply)
+}

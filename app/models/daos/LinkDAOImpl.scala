@@ -18,11 +18,10 @@ class LinkDAOImpl @Inject()(protected val dbConfigProvider: DatabaseConfigProvid
 
   val links = TableQuery[LinkTableDef]
 
-  def add(l: Link): Future[Long] = {
+  def add(l: Link): Future[Long] = 
     dbConfig.db.run(links returning links.map(_.id) += l).recover {
       case e: Exception => -1
     }
-  }
 
   def delete(id: Long): Future[Int] = {
     dbConfig.db.run(links.filter(_.id === id).delete)
