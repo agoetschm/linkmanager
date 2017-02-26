@@ -1,11 +1,11 @@
 package models.daos
 
 import com.google.inject.Inject
-import models.{Link, LinkTableDef}
+import models.{Link, LinkTableDef, User}
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import slick.driver.JdbcProfile
-import scala.concurrent.ExecutionContext.Implicits.global
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 /**
@@ -18,18 +18,18 @@ class LinkDAOImpl @Inject()(protected val dbConfigProvider: DatabaseConfigProvid
 
   val links = TableQuery[LinkTableDef]
 
-  def add(l: Link): Future[Long] = {
-    dbConfig.db.run(links returning links.map(_.id) += l).recover {
+  def add(l: Link): Future[Long] =
+    db.run(links returning links.map(_.id) += l).recover {
       case e: Exception => -1
     }
-  }
 
   def delete(id: Long): Future[Int] = {
-    dbConfig.db.run(links.filter(_.id === id).delete)
+    db.run(links.filter(_.id === id).delete)
   }
 
   def get(id: Long): Future[Option[Link]] =
-    dbConfig.db.run(links.filter(_.id === id).result.headOption)
+    db.run(links.filter(_.id === id).result.headOption)
 
-  def listAll: Future[Seq[Link]] = dbConfig.db.run(links.result)
+  def linksForUser(user: User): Future[Seq[Link]] =
+    db.run(links.filter(_.userId === user.id).result)
 }

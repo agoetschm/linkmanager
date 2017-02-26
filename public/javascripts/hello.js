@@ -6,5 +6,12 @@ if (window.console) {
 
         $('.button-collapse').sideNav();
 
+        // $('.collapsible').collapsible();
+
+        $(".dropdown-button").dropdown({hover: true, belowOrigin: true});
+        // $(".dropdown-button-2").dropdown();
+
+
+        console.log("test")
     });
 })(jQuery);
