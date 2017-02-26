@@ -1,6 +1,6 @@
 package models.daos
 
-import models.Link
+import models.{Link, User}
 
 import scala.concurrent.Future
 
@@ -15,5 +15,5 @@ trait LinkDAO {
 
   def get(id: Long): Future[Option[Link]]
 
-  def listAll: Future[Seq[Link]]
+  def linksForUser(user: User): Future[Seq[Link]]
 }

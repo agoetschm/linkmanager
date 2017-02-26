@@ -45,12 +45,9 @@ class SignUp @Inject()(
             val user = User(0 /* will be set at creation */ , data.username)
             for {
               user <- userService.create(user)
-//              user2 <- userService.retrieve(loginInfo)
-              authInfo <- authInfoRepository.add(loginInfo, authInfo)
-              testpass <- authInfoRepository.find[PasswordInfo](loginInfo)
-              
+              authInfo <- authInfoRepository.add(loginInfo, authInfo)              
             } yield {
-              Redirect(routes.SignUp.view()).flashing("info" -> ("Successfully signed up !" + testpass))
+              Redirect(routes.SignUp.view()).flashing("info" -> ("Successfully signed up !"))
             }
         }
       }

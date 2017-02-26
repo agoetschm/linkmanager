@@ -17,10 +17,12 @@ class PasswordTableDef(tag: Tag) extends Table[Password](tag, "passwords") {
 
   def password = column[String]("password")
 
+  
   val users = TableQuery[UserTableDef]
 
   def user = foreignKey("user_fk", userId, users)(_.id,
     onUpdate = ForeignKeyAction.Restrict, onDelete = ForeignKeyAction.Cascade)
 
+  
   override def * = (userId, password) <> (Password.tupled, Password.unapply)
 }

@@ -1,10 +1,10 @@
 @import utils.Home
-@(linkForm: Form[models.LinkData], links: Seq[Link], maybeUser: Option[User])(implicit messages: Messages, request: RequestHeader)
+@(linkForm: Form[models.LinkData], links: Seq[Link], user: User)(implicit messages: Messages, request: RequestHeader)
 
     @import helper._
     @import views.FormHelper._
 
-    @main("Home", Home, maybeUser) {
+    @main("Home", Home, Some(user)) {
         <div class="container row">
             <div class="col l7 m12">
                 @*<h4>Links</h4>*@

@@ -3,6 +3,7 @@ package utils.auth
 
 import com.google.inject.Inject
 import com.mohiva.play.silhouette.api.actions.SecuredErrorHandler
+import play.api.Logger
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{RequestHeader, Result}
 import play.api.mvc.Results._
@@ -39,7 +40,7 @@ class CustomSecuredErrorHandler @Inject()(val messagesApi: MessagesApi)
     * @return The result to send to the client.
     */
   override def onNotAuthorized(implicit request: RequestHeader): Future[Result] = {
-
-    Future.successful(Redirect(controllers.routes.LogIn.view()).flashing("error" -> "Access denied."))
+    Logger.debug("not authorized secured action")
+    Future.successful(Forbidden("Access denied."))//.flashing("error" -> "Access denied."))
   }
 }
