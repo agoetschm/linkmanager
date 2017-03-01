@@ -11,7 +11,5 @@ if (window.console) {
         $(".dropdown-button").dropdown({hover: true, belowOrigin: true});
         // $(".dropdown-button-2").dropdown();
 
-
-        console.log("test")
     });
 })(jQuery);

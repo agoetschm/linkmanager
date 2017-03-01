@@ -6,7 +6,7 @@ import com.mohiva.play.silhouette.api.{LoginEvent, Silhouette}
 import com.mohiva.play.silhouette.api.util.Credentials
 import com.mohiva.play.silhouette.impl.exceptions.IdentityNotFoundException
 import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
-import models.UserLogInForm
+import models.forms.UserLogInForm
 import models.services.UserService
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc._

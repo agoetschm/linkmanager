@@ -5,7 +5,8 @@ import com.google.inject.Inject
 import com.mohiva.play.silhouette.api.{HandlerResult, LogoutEvent, Silhouette}
 import models.daos.LinkDAO
 import models.services.UserService
-import models.{Link, LinkForm}
+import models.Link
+import models.forms.LinkForm
 import play.api.Logger
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json.Json

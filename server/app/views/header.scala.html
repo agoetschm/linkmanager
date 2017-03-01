@@ -1,6 +1,6 @@
-@import utils.{Location, LogIn, SignUp}
-@(location: Location, maybeUser: Option[User])
+@(location: utils.Location, maybeUser: Option[User])
 
+@import utils.{Location, LogIn, SignUp}
 
 @menu() = @{
     maybeUser match {

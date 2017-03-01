@@ -1,5 +1,4 @@
-@import utils.Location
-@(title: String, location: Location, maybeUser: Option[User])(content: Html)
+@(title: String, location: utils.Location, maybeUser: Option[User])(content: Html)
 
 <!DOCTYPE html>
 <html lang="en">
@@ -33,5 +32,10 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/js/materialize.min.js"></script>
         @*<script src="@routes.Assets.versioned("lib/materialize/bin/materialize.js")"></script>*@
         <script src="@routes.Assets.versioned("javascripts/hello.js")" type="text/javascript"></script>
+        
+        @scalajs.html.scripts(
+            "client", 
+            routes.Assets.versioned(_).toString, 
+            name => getClass.getResource(s"/public/$name") != null)
     </body>
 </html>

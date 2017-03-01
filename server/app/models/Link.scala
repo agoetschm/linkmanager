@@ -16,24 +16,7 @@ case class Link(id: Long, userId: Long, url: String, name: String, description: 
 
 case class LinkData(url: String, name: String, description: Option[String])
 
-object LinkForm {
-  private val urlRegex = "(^|[\\s.:;?\\-\\]<\\(])(https?://[-\\w;/?:@&=+$\\|\\_.!~*\\|'()\\[\\]%#,☺]+[\\w/#](\\(\\))?)(?=$|[\\s',\\|\\(\\).:;?\\-\\[\\]>\\)])"
-  private val urlContraint = Constraint[String] { s: String =>
-    if (s.matches(urlRegex))
-      Valid
-    else
-      Invalid("this field isn't a valid url")
 
-  }
-
-  val form = Form(
-    mapping(
-      "url" -> nonEmptyText.verifying(urlContraint),
-      "name" -> nonEmptyText,
-      "description" -> optional(text)
-    )(LinkData.apply)(LinkData.unapply)
-  )
-}
 
 class LinkTableDef(tag: Tag) extends Table[Link](tag, "links") {
   def id = column[Long]("id", O.PrimaryKey, O.AutoInc)

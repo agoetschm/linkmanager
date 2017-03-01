@@ -1,40 +1,70 @@
-
-name := "linkmanager"
-
-version := "1.0-SNAPSHOT"
-
-lazy val root = (project in file(".")).enablePlugins(PlayScala)
-
-scalaVersion := "2.11.8"
+val scalaV = "2.11.8"
 
 val webjars = Seq(
-  "org.webjars.bower" % "jquery" % "3.1.0",
-  "org.webjars.bower" % "materialize" % "0.97.6"
+  //  "org.webjars.bower" % "jquery" % "3.1.0",
+  //  "org.webjars.bower" % "materialize" % "0.97.6"
 )
 
-libraryDependencies ++= Seq(
-  //jdbc,
-  //anorm,
-  cache,
-  ws,
-  "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % Test,
-  
-  // database
-  "com.typesafe.play" %% "play-slick" % "2.0.0",
-  "com.typesafe.play" %% "play-slick-evolutions" % "2.0.0",
-  "org.postgresql" % "postgresql" % "9.4-1202-jdbc41",
-  
-  // silhouette
-  "com.mohiva" %% "play-silhouette" % "4.0.0",
-  "com.mohiva" %% "play-silhouette-password-bcrypt" % "4.0.0",
-  "com.mohiva" %% "play-silhouette-crypto-jca" % "4.0.0",
-  "com.mohiva" %% "play-silhouette-persistence" % "4.0.0",
-  "com.mohiva" %% "play-silhouette-testkit" % "4.0.0" % "test",
-  
-  // from the play-silhouette-seed
-  "net.codingwell" %% "scala-guice" % "4.1.0",
-  "com.iheart" %% "ficus" % "1.4.0"
-) ++ webjars
+lazy val server = (project in file("server")).settings(
+  scalaVersion := scalaV,
+  scalaJSProjects := Seq(client),
+  pipelineStages in Assets := Seq(scalaJSPipeline),
+  pipelineStages := Seq(digest, gzip),
+  // triggers scalaJSPipeline when using compile or continuous compilation
+  compile in Compile := ((compile in Compile) dependsOn scalaJSPipeline).value,
+  libraryDependencies ++= Seq(
+    //jdbc,
+    //anorm,
+    cache,
+    ws,
+    "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % Test,
 
-resolvers += Resolver.jcenterRepo
+    // database
+    "com.typesafe.play" %% "play-slick" % "2.0.0",
+    "com.typesafe.play" %% "play-slick-evolutions" % "2.0.0",
+    "org.postgresql" % "postgresql" % "9.4-1202-jdbc41",
+
+    // silhouette
+    "com.mohiva" %% "play-silhouette" % "4.0.0",
+    "com.mohiva" %% "play-silhouette-password-bcrypt" % "4.0.0",
+    "com.mohiva" %% "play-silhouette-crypto-jca" % "4.0.0",
+    "com.mohiva" %% "play-silhouette-persistence" % "4.0.0",
+    "com.mohiva" %% "play-silhouette-testkit" % "4.0.0" % "test",
+    
+    // from the play-silhouette-seed
+    "net.codingwell" %% "scala-guice" % "4.1.0",
+    "com.iheart" %% "ficus" % "1.4.0",
+
+    // scala-js in twirl template
+    "com.vmunier" %% "scalajs-scripts" % "1.0.0"
+  ) ++ webjars
+).enablePlugins(PlayScala).
+  dependsOn(sharedJvm)
+
+
+lazy val client = (project in file("client")).settings(
+  scalaVersion := scalaV,
+  persistLauncher := true,
+  persistLauncher in Test := false,
+  libraryDependencies ++= Seq(
+    "be.doeraene" %%% "scalajs-jquery" % "0.9.1"
+  ),
+  skip in packageJSDependencies := false,
+  jsDependencies +=
+    "org.webjars" % "jquery" % "2.1.4" / "2.1.4/jquery.js"
+).enablePlugins(ScalaJSPlugin, ScalaJSWeb).
+  dependsOn(sharedJs)
+
+
+lazy val shared = (crossProject.crossType(CrossType.Pure) in file("shared")).
+  settings(scalaVersion := scalaV).
+  jsConfigure(_ enablePlugins ScalaJSWeb)
+
+lazy val sharedJvm = shared.jvm
+lazy val sharedJs = shared.js
+
+// loads the server project at sbt startup
+onLoad in Global := (Command.process("project server", _: State)) compose (onLoad in Global).value
+
+
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"

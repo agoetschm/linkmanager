@@ -4,9 +4,8 @@ bin/
 /lib/
 /logs/
 /modules
-/project/target
 /project/project
-/target
+target/
 tmp/
 test-result
 server.pid
@@ -14,5 +13,7 @@ server.pid
 /dist/
 .cache
 .idea
+
+logs/
 
 /run.sh

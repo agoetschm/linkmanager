@@ -13,29 +13,11 @@ import slick.driver.PostgresDriver.api._
   */
 case class User(id: Long, username: String) extends Identity
 
-// log in
 case class UserLogInData(username: String, password: String)
 
-object UserLogInForm {
-  val form = Form(
-    mapping(
-      "username" -> nonEmptyText,
-      "password" -> nonEmptyText
-    )(UserLogInData.apply)(UserLogInData.unapply)
-  )
-}
-
-// sign up
 case class UserSignUpData(username: String, password: String)
 
-object UserSignUpForm {
-  val form = Form(
-    mapping(
-      "username" -> nonEmptyText,
-      "password" -> nonEmptyText
-    )(UserSignUpData.apply)(UserSignUpData.unapply)
-  )
-}
+
 
 class UserTableDef(tag: Tag) extends Table[User](tag, "users") {
   def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
