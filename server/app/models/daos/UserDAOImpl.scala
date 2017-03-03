@@ -4,7 +4,8 @@ package models.daos
 import com.google.inject.Inject
 import com.mohiva.play.silhouette.api.LoginInfo
 import com.mohiva.play.silhouette.api.exceptions.AuthenticatorCreationException
-import models.{User, UserTableDef}
+import models.User
+import models.tables.UserTableDef
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import slick.driver.JdbcProfile
 

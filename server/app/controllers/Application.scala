@@ -2,15 +2,14 @@ package controllers
 
 
 import com.google.inject.Inject
-import com.mohiva.play.silhouette.api.{HandlerResult, LogoutEvent, Silhouette}
-import models.daos.LinkDAO
-import models.services.UserService
+import com.mohiva.play.silhouette.api.{LogoutEvent, Silhouette}
 import models.Link
+import models.daos.LinkDAO
 import models.forms.LinkForm
 import play.api.Logger
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.libs.json.Json
 import play.api.mvc._
+import upickle.default._
 import utils.auth.{BeingOwnerOf, DefaultEnv}
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -52,17 +51,22 @@ class Application @Inject()(
       }
     )
   }
-  def deleteLink(linkId: Long) = {
-    Logger.debug("try to delete link with id " + linkId)
+
+  def deleteLink(linkId: Long) =
     silhouette.SecuredAction(BeingOwnerOf[DefaultEnv#A](linkId)(linkDAO)).async {
-      Logger.debug("is right user")
       linkDAO.delete(linkId) map { res =>
         Logger.debug("deleted " + res + " link(s)")
         Redirect(routes.Application.index())
       }
     }
-  }
   
+  def listLinks = silhouette.SecuredAction.async{ implicit req =>
+    linkDAO.linksForUser(req.identity).map { links =>
+      val json = write[Seq[Link]](links)
+      Ok(json)
+    }
+  }
+
 
   def logout() = silhouette.SecuredAction.async { implicit request =>
     val result = Redirect(routes.Application.index())

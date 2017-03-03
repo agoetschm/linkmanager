@@ -30,7 +30,7 @@ lazy val server = (project in file("server")).settings(
     "com.mohiva" %% "play-silhouette-crypto-jca" % "4.0.0",
     "com.mohiva" %% "play-silhouette-persistence" % "4.0.0",
     "com.mohiva" %% "play-silhouette-testkit" % "4.0.0" % "test",
-    
+
     // from the play-silhouette-seed
     "net.codingwell" %% "scala-guice" % "4.1.0",
     "com.iheart" %% "ficus" % "1.4.0",
@@ -46,19 +46,26 @@ lazy val client = (project in file("client")).settings(
   scalaVersion := scalaV,
   persistLauncher := true,
   persistLauncher in Test := false,
+  mainClass in Compile := Some("MainApp"),
   libraryDependencies ++= Seq(
-    "be.doeraene" %%% "scalajs-jquery" % "0.9.1"
+    "be.doeraene" %%% "scalajs-jquery" % "0.9.1",
+    "org.scala-js" %%% "scalajs-dom" % "0.9.0",
+    "com.lihaoyi" %%% "scalatags" % "0.6.3"
   ),
   skip in packageJSDependencies := false,
   jsDependencies +=
-    "org.webjars" % "jquery" % "2.1.4" / "2.1.4/jquery.js"
+    "org.webjars" % "jquery" % "3.1.1" / "3.1.1/jquery.js"
 ).enablePlugins(ScalaJSPlugin, ScalaJSWeb).
   dependsOn(sharedJs)
 
 
-lazy val shared = (crossProject.crossType(CrossType.Pure) in file("shared")).
-  settings(scalaVersion := scalaV).
-  jsConfigure(_ enablePlugins ScalaJSWeb)
+lazy val shared = (crossProject.crossType(CrossType.Pure) in file("shared"))
+  .settings(
+    scalaVersion := scalaV,
+    libraryDependencies ++= Seq(
+      "com.lihaoyi" %%% "upickle" % "0.4.3"
+    ))
+  .jsConfigure(_ enablePlugins ScalaJSWeb)
 
 lazy val sharedJvm = shared.jvm
 lazy val sharedJs = shared.js

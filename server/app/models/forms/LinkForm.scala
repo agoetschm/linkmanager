@@ -1,6 +1,6 @@
 package models.forms
 
-import models.LinkData
+import models.LinkAddData
 import play.api.data.Form
 import play.api.data.Forms.{mapping, nonEmptyText, optional, text}
 import play.api.data.validation.{Constraint, Invalid, Valid}
@@ -23,6 +23,6 @@ object LinkForm {
       "url" -> nonEmptyText.verifying(urlContraint),
       "name" -> nonEmptyText,
       "description" -> optional(text)
-    )(LinkData.apply)(LinkData.unapply)
+    )(LinkAddData.apply)(LinkAddData.unapply)
   )
 }

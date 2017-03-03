@@ -1,10 +1,10 @@
 @(userForm: Form[models.UserSignUpData])(implicit messages: Messages, request: RequestHeader, flash: Flash)
 
     @import helper._
-    @import views.FormHelper._
     @import utils.SignUp
+    @import views.FormHelper._
 
-    @main("Sign up", SignUp, None) {
+@main("Sign up", SignUp, None) {
         <div class="container row">
             <div class="col l6 offset-l3 m8 offset-m2 s12">
                 @{

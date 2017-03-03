@@ -1,23 +1,11 @@
-package models
+package models.tables
 
-import java.awt.Image
-
-import play.api.data.Form
-import play.api.data.Forms._
-import play.api.data.validation.{Constraint, Invalid, Valid}
-
+import models.Link
 import slick.driver.PostgresDriver.api._
 
-
 /**
-  * Link model
+  * Link table definition
   */
-case class Link(id: Long, userId: Long, url: String, name: String, description: Option[String], screenshot: Option[Array[Byte]])
-
-case class LinkData(url: String, name: String, description: Option[String])
-
-
-
 class LinkTableDef(tag: Tag) extends Table[Link](tag, "links") {
   def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
 
@@ -47,4 +35,3 @@ class LinkTableDef(tag: Tag) extends Table[Link](tag, "links") {
   //    case Link(i, u, n, d, im) => Option((i, u, n, d, None))
   //  })
 }
-

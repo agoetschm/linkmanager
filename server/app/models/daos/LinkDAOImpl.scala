@@ -1,7 +1,8 @@
 package models.daos
 
 import com.google.inject.Inject
-import models.{Link, LinkTableDef, User}
+import models.tables.LinkTableDef
+import models.{Link, User}
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import slick.driver.JdbcProfile
 
