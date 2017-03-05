@@ -23,22 +23,36 @@ object MainApp extends JSApp {
   override def main(): Unit = {
 
     val linksListDest = jQuery("#links-list")
-    if (linksListDest.length != 0) 
-      loadLinksIn(linksListDest)
+    if (linksListDest.length != 0)
+      loadLinks()
   }
-  
-  def loadLinksIn(destination: JQuery): Unit = Ajax.get("/listLinks").onSuccess{ case xhr =>
+
+  def loadLinks(): Unit = Ajax.get("/listLinks").onSuccess { case xhr =>
+    val list = jQuery("#links-list")
+    
     val links = read[Seq[Link]](xhr.responseText)
-    for(link <- links) {
+    for (link <- links) {
       // TODO twirl in client https://medium.com/@muuki88/finch-scala-js-twirl-templates-b46d2123ea78#.lc3d90joj
-      destination.append(
-        tr(
-          td(a(href := link.url, link.name)),
-          td(link.description),
-          td(a(`class` := "btn-flat right waves-effect", href := "/deleteLink/" + link.id,
-            i(`class` := "material-icons", "delete")))
-        ).render
+      val delButton = a(
+        `class` := "btn-flat right waves-effect",
+//        href := "/deleteLink/" + link.id,
+        onclick:="MainApp().deleteLink(" + link.id + ")", 
+        i(`class` := "material-icons", "delete"))
+      val row = tr(
+        td(a(href := link.url, link.name)),
+        td(link.description),
+        td(delButton)
       )
+      list.append(row.render)
+    }
+  }
+
+  @JSExport
+  def deleteLink(linkId: Integer): Unit = {
+    println("delete link " + linkId)
+    Ajax.get("/deleteLink/" + linkId).onSuccess { case xhr =>
+      jQuery("#links-list").empty() // clear list
+      loadLinks();
     }
   }
 }
