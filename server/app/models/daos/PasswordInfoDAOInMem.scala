@@ -19,22 +19,24 @@ import PasswordInfoDAOInMem._
 class PasswordInfoDAOInMem @Inject()(userDAO: UserDAO, passwordHasherRegistry: PasswordHasherRegistry)
   extends DelegableAuthInfoDAO[PasswordInfo] {
 
-  override def find(loginInfo: LoginInfo): Future[Option[PasswordInfo]] = {
-    userDAO.find(loginInfo).map {
-      case Some(user) => passwords.find { case (id, pass) => id == user.id }.map(_._2)
-      case None => None
-    }
-  }
+  override def find(loginInfo: LoginInfo): Future[Option[PasswordInfo]] = ???
+//  {
+//    userDAO.find(loginInfo).map {
+//      case Some(user) => passwords.find { case (id, pass) => id == user.id }.map(_._2)
+//      case None => None
+//    }
+//  }
 
-  override def add(loginInfo: LoginInfo, authInfo: PasswordInfo): Future[PasswordInfo] = {
-    userDAO.find(loginInfo).map {
-      case Some(user) =>
-        passwords += (user.id -> authInfo)
-        authInfo
-      case None => throw new AuthenticatorCreationException("no user for loginInfo " + loginInfo)
-    }
-
-  }
+  override def add(loginInfo: LoginInfo, authInfo: PasswordInfo): Future[PasswordInfo] = ???
+//  {
+//    userDAO.find(loginInfo).map {
+//      case Some(user) =>
+//        passwords += (user.id -> authInfo)
+//        authInfo
+//      case None => throw new AuthenticatorCreationException("no user for loginInfo " + loginInfo)
+//    }
+//
+//  }
 
   override def update(loginInfo: LoginInfo, authInfo: PasswordInfo): Future[PasswordInfo] = ???
 

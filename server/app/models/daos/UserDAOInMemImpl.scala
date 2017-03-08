@@ -20,10 +20,10 @@ class UserDAOInMemImpl
 
   //  import dbConfig.driver.api._
 
-  override def find(loginInfo: LoginInfo): Future[Option[User]] =
-    Future.successful(users
-      .find { case (id, user) => user.username == loginInfo.providerKey }
-      .map(_._2))
+  override def find(username: String): Future[Option[User]] = ???
+//    Future.successful(users
+//      .find { case (id, user) => user.username == loginInfo.providerKey }
+//      .map(_._2))
 
   override def add(user: User): Future[User] = {
     maxId += 1
