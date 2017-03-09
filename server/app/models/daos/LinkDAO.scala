@@ -9,9 +9,9 @@ import scala.concurrent.Future
   */
 
 trait LinkDAO {
-  def add(l: Link): Future[Long]
+  def add(l: Link): Future[Option[Long]]
 
-  def delete(id: Long): Future[Int]
+  def delete(id: Long): Future[Boolean]
 
   def get(id: Long): Future[Option[Link]]
 
