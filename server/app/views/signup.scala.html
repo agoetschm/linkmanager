@@ -1,0 +1,41 @@
+@(userForm: Form[models.UserSignUpData])(implicit messages: Messages, request: RequestHeader, flash: Flash)
+
+    @import helper._
+    @import utils.SignUp
+    @import views.FormHelper._
+
+@main("Sign up", SignUp, None) {
+        <div class="container row">
+            <div class="col l6 offset-l3 m8 offset-m2 s12">
+                @{
+                    val maybeInfo = flash.get("info")
+                    if(maybeInfo.isDefined) {
+                            <div class="card-panel">
+                            {maybeInfo.get}
+                            </div>
+                    }
+                }
+
+                <div class="card-panel">
+                    <h5 class="center">Sign up</h5>
+
+                    @{
+                        val maybeError = flash.get("error")
+                        if(maybeError.isDefined) {
+                                <i>{maybeError.get}</i>
+                            // TODO Materialize.toast('I am a toast!', 4000) 
+                        }
+                    }
+
+                    @form(action = routes.SignUp.submit()) {
+                        @inputText(userForm("username"), '_label -> "Username", 'required -> "true",
+                            'class -> "validate", '_showConstraints -> false)
+                        @inputPassword(userForm("password"), '_label -> "Password", 'required -> "true",
+                            'class -> "validate", '_showConstraints -> false)
+
+                        <div class="center"> <button class="btn waves-effect" type="submit">Sign up</button></div>
+                    }
+                </div>
+            </div>
+        </div>
+    }

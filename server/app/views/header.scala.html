@@ -1,0 +1,45 @@
+@import utils.Location
+@import utils.LogIn
+@(location: Location, maybeUser: Option[User])
+
+@import utils.SignUp
+
+@menu() = @{
+    maybeUser match {
+        case Some(user) =>
+            <li>
+            <a class="dropdown-button" href="#!" data-activates="logout-dropdown">
+            {user.username}<i class="material-icons right">arrow_drop_down</i>
+            </a>
+            <ul id="logout-dropdown" class="dropdown-content">
+            <li><a href='/logout'>Log out</a></li>
+            </ul>
+            </li>
+        case None => location match {
+            // TODO remove repetition
+            case LogIn =>
+                <li><a href='/signup'>Sign up</a></li>
+                <li class="active"><a href='/login'>Log in</a></li>
+            case SignUp =>
+                <li class="active"><a href='/signup'>Sign up</a></li>
+                <li><a href='/login'>Log in</a></li>
+            case _ =>
+                <li><a href='/signup'>Sign up</a></li>
+                <li><a href='/login'>Log in</a></li>
+        }
+    }
+}
+
+<nav>
+    <div class="nav-wrapper container">
+        <a href="/" class="brand-logo">LinkManager</a>
+        <a href="/" data-activates="mobile-nav" class="button-collapse">
+            <i class="material-icons">menu</i></a>
+        <ul class="side-nav" id="mobile-nav">
+        @menu
+        </ul>
+        <ul class="right hide-on-med-and-down">
+        @menu
+        </ul>
+    </div>
+</nav>

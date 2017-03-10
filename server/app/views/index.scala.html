@@ -1,0 +1,39 @@
+@(linkForm: Form[models.LinkAddData], links: Seq[Link], user: User)(implicit messages: Messages, request: RequestHeader)
+
+@import helper._
+@import utils.Home
+@import views.FormHelper._
+
+@main("Home", Home, Some(user)) {
+    <div class="container row">
+        <div class="col l7 m12">
+            <table class="striped">
+                <thead>
+                    <tr>
+                        <th>Link</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody id="links-list"></tbody>
+            </table>
+        </div>
+
+        <div class="col l5 m8 offset-m2 s12">
+            <div class="card-panel">
+                <h5 class="center">New link</h5>
+                @* @form(action = routes.Application.addLink) {*@
+                <form id="new-link-form">
+                    @inputText(linkForm("url"), '_label -> "URL", 'type -> "url", 'required -> "true",
+                        'class -> "validate", '_showConstraints -> false)
+                    @inputText(linkForm("name"), '_label -> "Name", 'required -> "true",
+                        'class -> "validate", '_showConstraints -> false)
+                    @inputText(linkForm("description"), '_label -> "Small description")
+
+                    <div class="center"> <button class="btn waves-effect" type="submit">Add</button></div>
+                </form>
+                @* }*@
+            </div>
+        </div>
+    </div>
+
+}
