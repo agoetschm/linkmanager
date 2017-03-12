@@ -3,12 +3,11 @@ package controllers
 
 import com.google.inject.Inject
 import com.mohiva.play.silhouette.api.{LogoutEvent, Silhouette}
-import models.{Link, LinkAddData}
+import models.Link
 import models.daos.LinkDAO
 import models.forms.LinkForm
 import play.api.Logger
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.libs.json.Json
 import play.api.mvc._
 import upickle.default._
 import utils.RequestResult
@@ -16,6 +15,8 @@ import utils.auth.{BeingOwnerOf, DefaultEnv}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+
+import utils.ImplicitPicklers._
 
 /**
   * Home controller
@@ -25,6 +26,7 @@ class Application @Inject()(
                              linkDAO: LinkDAO,
                              val messagesApi: MessagesApi)
   extends Controller with I18nSupport {
+
 
   def index = silhouette.SecuredAction.async { implicit req =>
     linkDAO.linksForUser(req.identity).map { links =>
@@ -67,6 +69,7 @@ class Application @Inject()(
   def listLinks = silhouette.SecuredAction.async { implicit req =>
     linkDAO.linksForUser(req.identity).map { links =>
       val pickeled = write[Seq[Link]](links)
+      assert(implicitly[Reader[Link]] eq implicitly[Reader[Link]])
       Ok(pickeled)
     }
   }

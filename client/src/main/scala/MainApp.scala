@@ -9,6 +9,9 @@ import scala.scalajs.js.JSApp
 import scala.scalajs.js.annotation.JSExport
 import scalatags.Text.all._
 
+import utils.ImplicitPicklers._
+
+
 /**
   * Main
   */
@@ -61,6 +64,7 @@ object MainApp extends JSApp {
         list.empty() // clear list
 
         val links = read[Seq[Link]](jqXHR.responseText)
+
         for (link <- links) {
           // TODO twirl in client https://medium.com/@muuki88/finch-scala-js-twirl-templates-b46d2123ea78#.lc3d90joj
           val delButton = a(
