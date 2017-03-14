@@ -16,6 +16,18 @@
                 </thead>
                 <tbody id="links-list"></tbody>
             </table>
+
+            @*the confirm deletion modal*@
+            <div id="modal-delete-link" class="modal">
+                <div class="modal-content">
+                    <h5 class="center">Delete this link ?</h5>
+                </div>
+                <div class="modal-footer">
+                    <a id="button-confirm-delete-link" href="#" class="modal-action modal-close waves-effect waves-green btn-flat">
+                        Confirm</a>
+                    <a href="#" class="modal-action modal-close waves-effect waves-red btn-flat">Cancel</a>
+                </div>
+            </div>
         </div>
 
         <div class="col l5 m8 offset-m2 s12">
@@ -35,5 +47,4 @@
             </div>
         </div>
     </div>
-
 }

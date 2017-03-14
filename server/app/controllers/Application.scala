@@ -69,11 +69,12 @@ class Application @Inject()(
   def listLinks = silhouette.SecuredAction.async { implicit req =>
     linkDAO.linksForUser(req.identity).map { links =>
       val pickeled = write[Seq[Link]](links)
+//      val pickeled = write[Seq[Int]](Seq(1, 2, 3))
       assert(implicitly[Reader[Link]] eq implicitly[Reader[Link]])
       Ok(pickeled)
     }
   }
-
+  
 
   def logout() = silhouette.SecuredAction.async { implicit request =>
     val result = Redirect(routes.Application.index())

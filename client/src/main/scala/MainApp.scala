@@ -1,6 +1,7 @@
 
 import models.Link
 import org.scalajs.jquery.{JQueryAjaxSettings, JQueryEventObject, JQueryXHR, jQuery}
+import upickle.Invalid
 import upickle.default._
 import utils.RequestResult
 
@@ -8,7 +9,6 @@ import scala.scalajs.js
 import scala.scalajs.js.JSApp
 import scala.scalajs.js.annotation.JSExport
 import scalatags.Text.all._
-
 import utils.ImplicitPicklers._
 
 
@@ -33,32 +33,12 @@ object MainApp extends JSApp {
     }
   }
 
-  def postNewLink(): Unit = {
-    // TODO https://www.playframework.com/documentation/2.5.x/ScalaJavascriptRouting
-    println("new link")
 
-    val successMsg = "Successfully added a new link"
-    val failMsg = "The creation of the new link failed."
-
-    ajax("/addLink", "POST", Some(jQuery("#new-link-form").serialize()),
-      successHandler = jqXHR => {
-        val success = read[RequestResult](jqXHR.responseText).success
-        println("success = " + success)
-        displayMessage(
-          if (success) successMsg
-          else failMsg
-        )
-        // reset form and reload links
-        jQuery("#new-link-form").trigger("reset")
-        loadLinks()
-      },
-      errorHandler = () => displayMessage(failMsg)
-    )
-  }
+  // ACTIONS -------------------------------
 
   def loadLinks(): Unit =
     ajax("/listLinks", "GET", maybeData = None,
-      successHandler = jqXHR => {
+      successHandler = { jqXHR =>
         println("load links")
         val list = jQuery("#links-list")
         list.empty() // clear list
@@ -83,10 +63,46 @@ object MainApp extends JSApp {
       errorHandler = () => displayMessage("Failed to load links")
     )
 
+  def postNewLink(): Unit = {
+    // TODO https://www.playframework.com/documentation/2.5.x/ScalaJavascriptRouting
+    println("new link")
+
+    val successMsg = "Successfully added a new link"
+    val failMsg = "The creation of the new link failed."
+
+    ajax("/addLink", "POST", Some(jQuery("#new-link-form").serialize()),
+      successHandler = jqXHR => {
+        val success = read[RequestResult](jqXHR.responseText).success
+        println("success = " + success)
+        displayMessage(
+          if (success) successMsg
+          else failMsg
+        )
+        // reset form and reload links
+        jQuery("#new-link-form").trigger("reset")
+        loadLinks()
+      },
+      errorHandler = () => displayMessage(failMsg)
+    )
+  }
+
+
   @JSExport
-  def deleteLink(linkId: Integer): Unit = {
+  def deleteLink(linkId: Integer /* should be Long, but then needs 'L' */): Unit = {
     println("delete link " + linkId)
 
+    // modify the modal callback to delete the right link
+    val confirmBut = jQuery("#button-confirm-delete-link")
+    confirmBut.off("click") // remove old handler
+    confirmBut.click((e: JQueryEventObject) => {
+      println("confirm delete link " + linkId)
+      performDeleteLink(linkId)
+    })
+    // open the modal
+    Modal.confirmDeleteLink("modal-delete-link")
+  }
+
+  def performDeleteLink(linkId: Integer): Unit = {
     val successMsg = "Successfully deleted link"
     val failMsg = "Deletion of link failed"
 
@@ -103,7 +119,10 @@ object MainApp extends JSApp {
     )
   }
 
-  def displayMessage(msg: String) = Materialize.toast(msg, 3000)
+
+  // UTILS ------------------------------------
+
+  def displayMessage(msg: String) = Materialize.toast(msg, 4000)
 
 
   def ajax(url: String, reqType: String, maybeData: Option[String],
