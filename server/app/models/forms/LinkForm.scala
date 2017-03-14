@@ -14,7 +14,7 @@ object LinkForm {
     if (s.matches(urlRegex))
       Valid
     else
-      Invalid("this field isn't a valid url")
+      Invalid("is not a valid url")
 
   }
 

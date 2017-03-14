@@ -72,11 +72,11 @@ object MainApp extends JSApp {
 
     ajax("/addLink", "POST", Some(jQuery("#new-link-form").serialize()),
       successHandler = jqXHR => {
-        val success = read[RequestResult](jqXHR.responseText).success
-        println("success = " + success)
+        val result = read[RequestResult](jqXHR.responseText)
+        println("result = " + result)
         displayMessage(
-          if (success) successMsg
-          else failMsg
+          if (result.success) successMsg
+          else failMsg + " " + result.error.getOrElse("")
         )
         // reset form and reload links
         jQuery("#new-link-form").trigger("reset")

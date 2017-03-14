@@ -38,13 +38,15 @@ class Application @Inject()(
     LinkForm.form.bindFromRequest.fold(
       errorForm => {
         Logger.warn("error : " + errorForm.errors)
-        Future.successful(Ok(write(RequestResult(success = false))))
+        // only first error msg
+        val errorStr: String = errorForm.errors.map(e => "The field '" + e.key + "' " + e.message).mkString(" ")
+        Future.successful(Ok(write(RequestResult(success = false, Some(errorStr)))))
         //        Future.successful(Ok(views.html.index(errorForm, Seq.empty, req.identity)))
       },
       successData => {
         val name = successData.name.getOrElse(
           successData.url.replaceFirst("https?://", "")) // set name to url by default
-        
+
         linkDAO.add(Link(id = 0,
           userId = req.identity.id,
           url = successData.url,
@@ -71,12 +73,12 @@ class Application @Inject()(
   def listLinks = silhouette.SecuredAction.async { implicit req =>
     linkDAO.linksForUser(req.identity).map { links =>
       val pickeled = write[Seq[Link]](links)
-//      val pickeled = write[Seq[Int]](Seq(1, 2, 3))
+      //      val pickeled = write[Seq[Int]](Seq(1, 2, 3))
       assert(implicitly[Reader[Link]] eq implicitly[Reader[Link]])
       Ok(pickeled)
     }
   }
-  
+
 
   def logout() = silhouette.SecuredAction.async { implicit request =>
     val result = Redirect(routes.Application.index())
