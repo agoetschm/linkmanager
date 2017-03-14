@@ -7,3 +7,8 @@ import scala.scalajs.js
 object Materialize extends js.Object {
   def toast(msg: String, durationMs: Int): Unit = js.native
 }
+
+@js.native
+object Modal extends js.Object {
+  def confirmDeleteLink(modalId: String): Unit = js.native
+}

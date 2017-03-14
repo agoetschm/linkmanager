@@ -17,17 +17,17 @@ class LinkTableDef(tag: Tag) extends Table[Link](tag, "links") {
 
   def description = column[Option[String]]("description")
 
-  def screenshot = column[Option[Array[Byte]]]("screenshot")
-
 
   private val users = TableQuery[UserTableDef]
 
   def user = foreignKey("user_fk", userId, users)(_.id,
     onUpdate = ForeignKeyAction.Restrict, onDelete = ForeignKeyAction.Cascade)
 
-  
+
   override def * =
-    (id, userId, url, name, description, screenshot) <> (Link.tupled, Link.unapply)
+    (id, userId, url, name, description) <> ((Link.apply _).tupled
+      // because https://github.com/VirtusLab/unicorn/issues/11
+      , Link.unapply)
 
   //  <>[Link, (Long, String, String, Option[String], Option[Blob])]( {
   //    case ((id, url, name, descr, image)) => Link(id, url, name, descr, None)

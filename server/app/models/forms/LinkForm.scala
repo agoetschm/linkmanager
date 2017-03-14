@@ -14,14 +14,14 @@ object LinkForm {
     if (s.matches(urlRegex))
       Valid
     else
-      Invalid("this field isn't a valid url")
+      Invalid("is not a valid url")
 
   }
 
   val form = Form(
     mapping(
       "url" -> nonEmptyText.verifying(urlContraint),
-      "name" -> nonEmptyText,
+      "name" -> optional(text),
       "description" -> optional(text)
     )(LinkAddData.apply)(LinkAddData.unapply)
   )

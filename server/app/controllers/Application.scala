@@ -3,12 +3,11 @@ package controllers
 
 import com.google.inject.Inject
 import com.mohiva.play.silhouette.api.{LogoutEvent, Silhouette}
-import models.{Link, LinkAddData}
+import models.Link
 import models.daos.LinkDAO
 import models.forms.LinkForm
 import play.api.Logger
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.libs.json.Json
 import play.api.mvc._
 import upickle.default._
 import utils.RequestResult
@@ -16,6 +15,8 @@ import utils.auth.{BeingOwnerOf, DefaultEnv}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+
+import utils.ImplicitPicklers._
 
 /**
   * Home controller
@@ -25,6 +26,7 @@ class Application @Inject()(
                              linkDAO: LinkDAO,
                              val messagesApi: MessagesApi)
   extends Controller with I18nSupport {
+
 
   def index = silhouette.SecuredAction.async { implicit req =>
     linkDAO.linksForUser(req.identity).map { links =>
@@ -36,16 +38,20 @@ class Application @Inject()(
     LinkForm.form.bindFromRequest.fold(
       errorForm => {
         Logger.warn("error : " + errorForm.errors)
-        Future.successful(Ok(write(RequestResult(success = false))))
+        // only first error msg
+        val errorStr: String = errorForm.errors.map(e => "The field '" + e.key + "' " + e.message).mkString(" ")
+        Future.successful(Ok(write(RequestResult(success = false, Some(errorStr)))))
         //        Future.successful(Ok(views.html.index(errorForm, Seq.empty, req.identity)))
       },
       successData => {
+        val name = successData.name.getOrElse(
+          successData.url.replaceFirst("https?://", "")) // set name to url by default
+
         linkDAO.add(Link(id = 0,
           userId = req.identity.id,
           url = successData.url,
-          name = successData.name,
-          description = successData.description,
-          screenshot = Some(Array.emptyByteArray)) // TODO None does not work
+          name = name,
+          description = successData.description)
         ) map {
           maybeNewId =>
             Logger.debug("new link with id " + maybeNewId)
@@ -67,6 +73,8 @@ class Application @Inject()(
   def listLinks = silhouette.SecuredAction.async { implicit req =>
     linkDAO.linksForUser(req.identity).map { links =>
       val pickeled = write[Seq[Link]](links)
+      //      val pickeled = write[Seq[Int]](Seq(1, 2, 3))
+      assert(implicitly[Reader[Link]] eq implicitly[Reader[Link]])
       Ok(pickeled)
     }
   }
