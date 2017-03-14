@@ -53,7 +53,7 @@ object MainApp extends JSApp {
             onclick := "MainApp().deleteLink(" + link.id + ")",
             i(`class` := "material-icons", "delete"))
           val row = tr(
-            td(a(href := link.url, link.name)),
+            td(a(href := link.url, target := "_blank" /* open in new tab */, link.name)),
             td(link.description),
             td(delButton)
           )

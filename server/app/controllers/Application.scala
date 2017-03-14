@@ -42,12 +42,14 @@ class Application @Inject()(
         //        Future.successful(Ok(views.html.index(errorForm, Seq.empty, req.identity)))
       },
       successData => {
+        val name = successData.name.getOrElse(
+          successData.url.replaceFirst("https?://", "")) // set name to url by default
+        
         linkDAO.add(Link(id = 0,
           userId = req.identity.id,
           url = successData.url,
-          name = successData.name,
-          description = successData.description,
-          screenshot = Some(Array.emptyByteArray)) // TODO None does not work
+          name = name,
+          description = successData.description)
         ) map {
           maybeNewId =>
             Logger.debug("new link with id " + maybeNewId)

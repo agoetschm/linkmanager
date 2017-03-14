@@ -21,7 +21,7 @@ object LinkForm {
   val form = Form(
     mapping(
       "url" -> nonEmptyText.verifying(urlContraint),
-      "name" -> nonEmptyText,
+      "name" -> optional(text),
       "description" -> optional(text)
     )(LinkAddData.apply)(LinkAddData.unapply)
   )

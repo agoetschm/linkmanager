@@ -17,8 +17,6 @@ class LinkTableDef(tag: Tag) extends Table[Link](tag, "links") {
 
   def description = column[Option[String]]("description")
 
-  def screenshot = column[Option[Array[Byte]]]("screenshot")
-
 
   private val users = TableQuery[UserTableDef]
 
@@ -27,7 +25,7 @@ class LinkTableDef(tag: Tag) extends Table[Link](tag, "links") {
 
 
   override def * =
-    (id, userId, url, name, description, screenshot) <> ((Link.apply _).tupled
+    (id, userId, url, name, description) <> ((Link.apply _).tupled
       // because https://github.com/VirtusLab/unicorn/issues/11
       , Link.unapply)
 

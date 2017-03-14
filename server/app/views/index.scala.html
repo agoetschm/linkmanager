@@ -37,9 +37,9 @@
                 <form id="new-link-form">
                     @inputText(linkForm("url"), '_label -> "URL", 'type -> "url", 'required -> "true",
                         'class -> "validate", '_showConstraints -> false)
-                    @inputText(linkForm("name"), '_label -> "Name", 'required -> "true",
+                    @inputText(linkForm("name"), '_label -> "Name (optional)",
                         'class -> "validate", '_showConstraints -> false)
-                    @inputText(linkForm("description"), '_label -> "Small description")
+                    @inputText(linkForm("description"), '_label -> "Small description (optional)")
 
                     <div class="center"> <button class="btn waves-effect" type="submit">Add</button></div>
                 </form>
