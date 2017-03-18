@@ -6,6 +6,4 @@ package models
   */
 case class Password(userId: Long, password: String)
 
-// TODO add hasher + account activated
-
 

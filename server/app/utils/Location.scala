@@ -10,3 +10,5 @@ case object LogIn extends Location
 case object SignUp extends Location
 
 case object Home extends Location
+
+case object ActivateAccount extends Location

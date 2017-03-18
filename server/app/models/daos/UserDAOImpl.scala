@@ -23,8 +23,14 @@ class UserDAOImpl @Inject()(protected val dbConfigProvider: DatabaseConfigProvid
 
   val users = TableQuery[UserTableDef]
 
+  override def find(id: Long) =
+    dbConfig.db.run(users.filter(_.id === id).result.headOption)
+
   override def find(username: String): Future[Option[User]] =
     dbConfig.db.run(users.filter(_.username === username).result.headOption)
+
+  override def findByEmail(email: String) =
+    dbConfig.db.run(users.filter(_.email === email).result.headOption)
 
   // to implement UserService
   override def retrieve(loginInfo: LoginInfo): Future[Option[User]] = find(loginInfo.providerKey)
@@ -36,4 +42,10 @@ class UserDAOImpl @Inject()(protected val dbConfigProvider: DatabaseConfigProvid
         case e: Exception => throw new AuthenticatorCreationException("failed to create user " + user)
       }
 
+  override def update(user: User) = 
+    dbConfig.db.run(users.filter(_.id === user.id).update(user))
+      .map {
+        case 0 => None
+        case _ => Some(user)
+      }
 }

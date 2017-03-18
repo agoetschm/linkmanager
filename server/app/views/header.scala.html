@@ -1,6 +1,6 @@
 @import utils.Location
 @import utils.LogIn
-@(location: Location, maybeUser: Option[User])
+@(location: Location, maybeUser: Option[User])(implicit messages: Messages)
 
 @import utils.SignUp
 
@@ -12,27 +12,27 @@
             {user.username}<i class="material-icons right">arrow_drop_down</i>
             </a>
             <ul id="logout-dropdown" class="dropdown-content">
-            <li><a href='/logout'>Log out</a></li>
+            <li><a href='/logout'>{Messages("log.out")}</a></li>
             </ul>
             </li>
         case None => location match {
             // TODO remove repetition
             case LogIn =>
-                <li><a href='/signup'>Sign up</a></li>
-                <li class="active"><a href='/login'>Log in</a></li>
+                <li><a href='/signup'>{Messages("sign.up")}</a></li>
+                <li class="active"><a href='/login'>{Messages("log.in")}</a></li>
             case SignUp =>
-                <li class="active"><a href='/signup'>Sign up</a></li>
-                <li><a href='/login'>Log in</a></li>
+                <li class="active"><a href='/signup'>{Messages("sign.up")}</a></li>
+                <li><a href='/login'>{Messages("log.in")}</a></li>
             case _ =>
-                <li><a href='/signup'>Sign up</a></li>
-                <li><a href='/login'>Log in</a></li>
+                <li><a href='/signup'>{Messages("sign.up")}</a></li>
+                <li><a href='/login'>{Messages("log.in")}</a></li>
         }
     }
 }
 
 <nav>
     <div class="nav-wrapper container">
-        <a href="/" class="brand-logo">LinkManager</a>
+        <a href="/" class="brand-logo">@Messages("application.name")</a>
         <a href="/" data-activates="mobile-nav" class="button-collapse">
             <i class="material-icons">menu</i></a>
         <ul class="side-nav" id="mobile-nav">

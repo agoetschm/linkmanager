@@ -4,14 +4,14 @@
 @import utils.Home
 @import views.FormHelper._
 
-@main("Home", Home, Some(user)) {
+@main(Messages("home.title"), Home, Some(user)) {
     <div class="container row">
         <div class="col l7 m12">
             <table class="striped">
                 <thead>
                     <tr>
-                        <th>Link</th>
-                        <th>Description</th>
+                        <th>@Messages("link.link")</th>
+                        <th>@Messages("link.description")</th>
                     </tr>
                 </thead>
                 <tbody id="links-list"></tbody>
@@ -20,28 +20,28 @@
             @*the confirm deletion modal*@
             <div id="modal-delete-link" class="modal">
                 <div class="modal-content">
-                    <h5 class="center">Delete this link ?</h5>
+                    <h5 class="center">@Messages("delete.link.modal")</h5>
                 </div>
                 <div class="modal-footer">
                     <a id="button-confirm-delete-link" href="#" class="modal-action modal-close waves-effect waves-green btn-flat">
-                        Confirm</a>
-                    <a href="#" class="modal-action modal-close waves-effect waves-red btn-flat">Cancel</a>
+                    @Messages("delete.link.confirm")</a>
+                    <a href="#" class="modal-action modal-close waves-effect waves-red btn-flat">@Messages("delete.link.cancel")</a>
                 </div>
             </div>
         </div>
 
         <div class="col l5 m8 offset-m2 s12">
             <div class="card-panel">
-                <h5 class="center">New link</h5>
+                <h5 class="center">@Messages("new.link")</h5>
                 @* @form(action = routes.Application.addLink) {*@
                 <form id="new-link-form">
-                    @inputText(linkForm("url"), '_label -> "URL", 'type -> "url", 'required -> "true",
+                    @inputText(linkForm("url"), '_label -> Messages("link.url"), 'type -> "url", 
+                        'required -> "true", 'class -> "validate", '_showConstraints -> false)
+                    @inputText(linkForm("name"), '_label -> Messages("link.name.optional"),
                         'class -> "validate", '_showConstraints -> false)
-                    @inputText(linkForm("name"), '_label -> "Name (optional)",
-                        'class -> "validate", '_showConstraints -> false)
-                    @inputText(linkForm("description"), '_label -> "Small description (optional)")
+                    @inputText(linkForm("description"), '_label -> Messages("link.description.optional"))
 
-                    <div class="center"> <button class="btn waves-effect" type="submit">Add</button></div>
+                    <div class="center"> <button class="btn waves-effect" type="submit">@Messages("add.link")</button></div>
                 </form>
                 @* }*@
             </div>
