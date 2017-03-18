@@ -15,6 +15,8 @@
                 @form(action = routes.SignUp.submit()) {
                     @inputText(userForm("username"), '_label -> Messages("sign.up.username"),
                         'required -> "true", 'class -> "validate", '_showConstraints -> false)
+                    @inputText(userForm("email"), '_label -> Messages("sign.up.email"), 'type -> "email",
+                        'required -> "true", 'class -> "validate", '_showConstraints -> false)
                     @inputPassword(userForm("password"), '_label -> Messages("sign.up.password"),
                         'required -> "true", 'class -> "validate", '_showConstraints -> false)
 

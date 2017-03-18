@@ -26,7 +26,6 @@ import scala.language.postfixOps
  * @param userDAO      The user dao implementation.
  * @param authTokenService The auth token service implementation.
  * @param mailerClient     The mailer client.
- * @param webJarAssets     The WebJar assets locator.
  */
 class ActivateAccount @Inject()(
   val messagesApi: MessagesApi,
