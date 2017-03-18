@@ -8,7 +8,7 @@
     <div class="container row">
         <div class="col l6 offset-l3 m8 offset-m2 s12">
             @alerts()
-            
+
             <div class="card-panel">
                 <h5 class="center">@Messages("log.in.credentials")</h5>
                 @form(action = routes.LogIn.submit()) {
@@ -16,10 +16,13 @@
                         'required -> "true", 'class -> "validate", '_showConstraints -> false)
                     @inputPassword(userForm("password"), '_label -> Messages("log.in.password"),
                         'required -> "true", 'class -> "validate", '_showConstraints -> false)
-
+                    
                     <div class="center"> <button class="btn waves-effect" type="submit">
                     @Messages("log.in.now")
                     </button></div>
+                    
+                    <p class="center"><a href="@routes.ForgotPassword.view()">
+                    @Messages("forgot.your.password")</a></p>
                 }
             </div>
         </div>

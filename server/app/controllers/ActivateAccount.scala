@@ -19,7 +19,7 @@ import scala.concurrent.Future
 import scala.language.postfixOps
 
 /**
- * The `Activate Account` controller.
+ * Activate account controller.
  *
  * @param messagesApi      The Play messages API.
  * @param silhouette       The Silhouette stack.
@@ -46,7 +46,7 @@ class ActivateAccount @Inject()(
    */
   def send(email: String) = silhouette.UnsecuredAction.async { implicit request =>
     val decodedEmail = URLDecoder.decode(email, "UTF-8")
-    val result = Redirect(routes.LogIn.view()).flashing("info" -> ("Activation email sent to " + decodedEmail) /*Messages("activation.email.sent", decodedEmail)*/)
+    val result = Redirect(routes.LogIn.view()).flashing("info" -> Messages("activation.email.sent", decodedEmail))
 
     userDAO.findByEmail(decodedEmail).flatMap {
       case Some(user) if !user.activated =>
