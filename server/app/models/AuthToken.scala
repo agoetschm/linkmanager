@@ -12,6 +12,6 @@ import org.joda.time.DateTime
  * @param expiry The date-time the token expires.
  */
 case class AuthToken(
-  id: Long,
+  id: UUID,
   userID: Long,
   expiry: DateTime)

@@ -72,21 +72,17 @@ class ActivateAccount @Inject()(
    * @param token The token to identify a user.
    * @return The result to display.
    */
-  def activate(token: Long) = silhouette.UnsecuredAction.async { implicit request =>
+  def activate(token: UUID) = silhouette.UnsecuredAction.async { implicit request =>
     authTokenService.validate(token).flatMap {
       case Some(authToken) => userDAO.find(authToken.userID).flatMap {
         case Some(user) /* if user.loginInfo.providerID == CredentialsProvider.ID */ =>
-          Logger.debug("activate")
           userDAO.update(user.copy(activated = true)).map { _ =>
-            // TODO may fail
             Redirect(routes.LogIn.view()).flashing("success" -> Messages("account.activated"))
           }
         case _ =>
-          Logger.debug("fail : no user")
           Future.successful(Redirect(routes.LogIn.view()).flashing("error" -> Messages("invalid.activation.link")))
       }
       case None =>
-        Logger.debug("fail : no auth token")
         Future.successful(Redirect(routes.LogIn.view()).flashing("error" -> Messages("invalid.activation.link")))
     }
   }

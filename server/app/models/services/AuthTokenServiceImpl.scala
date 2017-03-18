@@ -29,7 +29,7 @@ class AuthTokenServiceImpl @Inject() (authTokenDAO: AuthTokenDAO, clock: Clock) 
    * @return The saved auth token.
    */
   def create(userID: Long, expiry: FiniteDuration = 5 minutes) = {
-    val token = AuthToken(-1, userID, clock.now.withZone(DateTimeZone.UTC).plusSeconds(expiry.toSeconds.toInt))
+    val token = AuthToken(UUID.randomUUID(), userID, clock.now.withZone(DateTimeZone.UTC).plusSeconds(expiry.toSeconds.toInt))
     authTokenDAO.save(token)
   }
 
@@ -39,7 +39,7 @@ class AuthTokenServiceImpl @Inject() (authTokenDAO: AuthTokenDAO, clock: Clock) 
    * @param id The token ID to validate.
    * @return The token if it's valid, None otherwise.
    */
-  def validate(id: Long) = authTokenDAO.find(id)
+  def validate(id: UUID) = authTokenDAO.find(id)
 
   /**
    * Cleans expired tokens.

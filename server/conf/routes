@@ -17,7 +17,8 @@ GET         /signup                           controllers.SignUp.view
 POST        /signup                           controllers.SignUp.submit
 
 GET         /account/email/:email             controllers.ActivateAccount.send(email: String)
-GET         /account/activate/:tokenId        controllers.ActivateAccount.activate(tokenId: Long)
+GET         /account/activate/:tokenId        controllers.ActivateAccount.activate(tokenId: java.util.UUID)
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                     controllers.Assets.versioned(path="/public", file: Asset)
+#GET         /favicon.ico                      controllers.Assets.at(path="/public/images", file="favicon.png")
