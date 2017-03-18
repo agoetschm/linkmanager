@@ -37,8 +37,9 @@ class LogIn @Inject()(
         credentialsProvider.authenticate(credentials).flatMap { loginInfo =>
           val result = Redirect(routes.Application.index())
           userService.retrieve(loginInfo).flatMap {
-            case Some(user) if !user.activated => 
-              Future.successful(Redirect(routes.LogIn.view()).flashing("error" -> "Account not activated."))
+            case Some(user) if !user.activated =>
+              Future.successful(Ok(views.html.activateAccount(user.email)))
+//              Future.successful(Redirect(routes.LogIn.view()).flashing("error" -> "Account not activated."))
             case Some(user) =>
               silhouette.env.authenticatorService.create(loginInfo).flatMap {
                 authenticator =>

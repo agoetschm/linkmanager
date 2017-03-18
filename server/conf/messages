@@ -19,7 +19,7 @@ log.out = Log out
 error.email = Valid email required
 error.required = This field is required
 invalid.credentials = Invalid credentials!
-username.taken = "Username already taken, choose an other one."
+username.taken = Username already taken, choose an other one.
 access.denied = Access denied!
 could.not.authenticate = Could not authenticate with social provider! Please try again!
 

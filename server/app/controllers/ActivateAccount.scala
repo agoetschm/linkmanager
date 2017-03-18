@@ -45,29 +45,27 @@ class ActivateAccount @Inject()(
    * @param email The email address of the user to send the activation mail to.
    * @return The result to display.
    */
-//  def send(email: String) = silhouette.UnsecuredAction.async { implicit request =>
-//    val decodedEmail = URLDecoder.decode(email, "UTF-8")
-//    val loginInfo = LoginInfo(CredentialsProvider.ID, decodedEmail)
-//    val result = Redirect(routes.LogIn.view()).flashing("info" -> ("Activation email sent to " + decodedEmail) /*Messages("activation.email.sent", decodedEmail)*/)
-//
-//    userDAO.find(loginInfo).flatMap {
-//      case Some(user) if !user.activated =>
-//        authTokenService.create(user.userID).map { authToken =>
-//          val url = routes.ActivateAccountController.activate(authToken.id).absoluteURL()
-//
-//          mailerClient.send(Email(
-//            subject = Messages("email.activate.account.subject"),
-//            from = Messages("email.from"),
-//            to = Seq(decodedEmail),
-//            bodyText = Some(views.txt.emails.activateAccount(user, url).body),
-//            bodyHtml = Some(views.html.emails.activateAccount(user, url).body)
-//          ))
-//          result
-//        }
-//      case None => Future.successful(result)
-//    }
-//    ???
-//  }
+  def send(email: String) = silhouette.UnsecuredAction.async { implicit request =>
+    val decodedEmail = URLDecoder.decode(email, "UTF-8")
+    val result = Redirect(routes.LogIn.view()).flashing("info" -> ("Activation email sent to " + decodedEmail) /*Messages("activation.email.sent", decodedEmail)*/)
+
+    userDAO.findByEmail(decodedEmail).flatMap {
+      case Some(user) if !user.activated =>
+        authTokenService.create(user.id).map { authToken =>
+          val url = routes.ActivateAccount.activate(authToken.id).absoluteURL()
+
+          mailerClient.send(Email(
+            subject = Messages("email.activate.account.subject"),
+            from = Messages("email.from"),
+            to = Seq(decodedEmail),
+            bodyText = Some(views.txt.emails.activateAccount(user, url).body),
+            bodyHtml = Some(views.html.emails.activateAccount(user, url).body)
+          ))
+          result
+        }
+      case _ => Future.successful(result) // prevents that anybody can try email and see if they are registered
+    }
+  }
 
   /**
    * Activates an account.
