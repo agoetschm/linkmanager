@@ -7,25 +7,10 @@
 @main(Messages("sign.up.title"), SignUp, None) {
     <div class="container row">
         <div class="col l6 offset-l3 m8 offset-m2 s12">
-            @{
-                val maybeInfo = flash.get("info")
-                if(maybeInfo.isDefined) {
-                        <div class="card-panel">
-                        {maybeInfo.get}
-                        </div>
-                }
-            }
-
+            @alerts()
+            
             <div class="card-panel">
                 <h5 class="center">@Messages("sign.up.account")</h5>
-
-                @{
-                    val maybeError = flash.get("error")
-                    if(maybeError.isDefined) {
-                            <i>{maybeError.get}</i>
-                        // TODO Materialize.toast('I am a toast!', 4000) 
-                    }
-                }
 
                 @form(action = routes.SignUp.submit()) {
                     @inputText(userForm("username"), '_label -> Messages("sign.up.username"),

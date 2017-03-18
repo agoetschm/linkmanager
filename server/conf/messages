@@ -82,11 +82,11 @@ sign.up.email.sent = You''re almost done! We sent an activation mail to {0}. Ple
 activation.email.sent = We sent another activation email to you at {0}. It might take a few minutes for it to arrive; be sure to check your spam folder.
 reset.email.sent = We have sent you an email with further instructions to reset your password, on condition that the address was found in our system. If you do not receive an email within the next 5 minutes, then please recheck your entered email address and try it again.
 
-invalid.activation.link = The link isn't valid anymore! Please sign in to send the activation email again.
+invalid.activation.link = The link isn't valid anymore! Please log in to send the activation email again.
 invalid.reset.link = The link isn't valid anymore! Please request a new link to reset your password.
 
-password.reset = We have reset your password. You can now sign in with your credentials.
-account.activated = Your account is now activated! Please sign in to use your new account.
+password.reset = We have reset your password. You can now log in with your credentials.
+account.activated = Your account is now activated! Please log in to use your new account.
 password.changed = Your password has been changed.
 
 google = Google

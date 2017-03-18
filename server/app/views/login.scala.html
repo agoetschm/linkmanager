@@ -7,30 +7,8 @@
 @main(Messages("log.in.title"), LogIn, None) {
     <div class="container row">
         <div class="col l6 offset-l3 m8 offset-m2 s12">
-            @{
-                val maybeError = flash.get("error")
-                if(maybeError.isDefined) {
-                        <div class="card-panel">
-                        {maybeError.get}
-                        </div>
-                }
-            }
-            @{
-                val maybeSuccess = flash.get("success")
-                if(maybeSuccess.isDefined) {
-                        <div class="card-panel">
-                        {maybeSuccess.get}
-                        </div>
-                }
-            }
-            @{
-                val maybeInfo = flash.get("info")
-                if(maybeInfo.isDefined) {
-                        <div class="card-panel">
-                        {maybeInfo.get}
-                        </div>
-                }
-            }
+            @alerts()
+            
             <div class="card-panel">
                 <h5 class="center">@Messages("log.in.credentials")</h5>
                 @form(action = routes.LogIn.submit()) {
