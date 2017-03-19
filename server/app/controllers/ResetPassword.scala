@@ -37,7 +37,7 @@ class ResetPassword @Inject()(
   extends Controller with I18nSupport {
 
   /**
-    * Views the `Reset Password` page.
+    * Reset password page
     *
     * @param token The token to identify a user.
     * @return The result to display.
@@ -50,7 +50,7 @@ class ResetPassword @Inject()(
   }
 
   /**
-    * Resets the password.
+    * Resets the password
     *
     * @param token The token to identify a user.
     * @return The result to display.

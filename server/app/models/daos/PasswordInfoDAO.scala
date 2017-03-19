@@ -55,12 +55,10 @@ class PasswordInfoDAO @Inject()(protected val dbConfigProvider: DatabaseConfigPr
     val password = maybeUserid.flatMap {
       case Some(userId) => db.run(
         passwords returning passwords.map(_.password) += Password(userId, authInfo.password))
-      //  TODO more appropriate exception
       case None => throw new Exception("no user for loginInfo " + loginInfo)
     }
     password.map(PasswordInfo(passwordHasherRegistry.current.id, _))
       .recover {
-        //  TODO more appropriate exception
         case e: Exception => throw new Exception("failed to create password " + authInfo)
       }
   }
@@ -73,7 +71,6 @@ class PasswordInfoDAO @Inject()(protected val dbConfigProvider: DatabaseConfigPr
         val password: Password = Password(user.id, authInfo.password)
         passwords.filter(_.userId === user.id).update(password)
     }
-
     db.run(update).map {
       case 0 => throw new Exception("failed to update password")
       case _ => authInfo

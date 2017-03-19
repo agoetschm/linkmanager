@@ -23,8 +23,8 @@ GET         /password/forgot                 controllers.ForgotPassword.view
 POST        /password/forgot                 controllers.ForgotPassword.submit
 GET         /password/reset/:token           controllers.ResetPassword.view(token: java.util.UUID)
 POST        /password/reset/:token           controllers.ResetPassword.submit(token: java.util.UUID)
-#GET         /password/change                 controllers.ChangePassword.view
-#POST        /password/change                 controllers.ChangePassword.submit
+GET         /password/change                 controllers.ChangePassword.view
+POST        /password/change                 controllers.ChangePassword.submit
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                     controllers.Assets.versioned(path="/public", file: Asset)
