@@ -35,11 +35,12 @@
                 <h5 class="center">@Messages("new.link")</h5>
                 @* @form(action = routes.Application.addLink) {*@
                 <form id="new-link-form">
-                    @inputText(linkForm("url"), '_label -> Messages("link.url"), 'type -> "url", 
+                    @inputText(linkForm("url"), '_label -> Messages("link.url"), 'type -> "url",
                         'required -> "true", 'class -> "validate", '_showConstraints -> false)
                     @inputText(linkForm("name"), '_label -> Messages("link.name.optional"),
                         'class -> "validate", '_showConstraints -> false)
-                    @inputText(linkForm("description"), '_label -> Messages("link.description.optional"))
+                    @textarea(linkForm("description"), '_label -> Messages("link.description.optional"),
+                        'class -> "validate materialize-textarea")
 
                     <div class="center"> <button class="btn waves-effect" type="submit">@Messages("add.link")</button></div>
                 </form>
