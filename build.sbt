@@ -34,8 +34,10 @@ lazy val server = (project in file("server")).settings(
     // from the play-silhouette-seed
     "net.codingwell" %% "scala-guice" % "4.1.0",
     "com.iheart" %% "ficus" % "1.4.0",
+    "com.enragedginger" %% "akka-quartz-scheduler" % "1.6.0-akka-2.4.x",
+    "com.typesafe.play" %% "play-mailer" % "5.0.0",
 
-    // scala-js in twirl template
+    // include scala-js client sources in twirl template
     "com.vmunier" %% "scalajs-scripts" % "1.0.0"
   ) ++ webjars
 ).enablePlugins(PlayScala).

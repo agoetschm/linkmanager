@@ -1,0 +1,26 @@
+@()(implicit flash: Flash)
+
+@{
+    val maybeError = flash.get("error")
+    if(maybeError.isDefined) {
+            <div class="card-panel red lighten-2">
+            {maybeError.get}
+            </div>
+    }
+}
+@{
+    val maybeSuccess = flash.get("success")
+    if(maybeSuccess.isDefined) {
+            <div class="card-panel green lighten-2">
+            {maybeSuccess.get}
+            </div>
+    }
+}
+@{
+    val maybeInfo = flash.get("info")
+    if(maybeInfo.isDefined) {
+            <div class="card-panel blue lighten-2">
+            {maybeInfo.get}
+            </div>
+    }
+}

@@ -2,19 +2,30 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-GET         /                      controllers.Application.index
+GET         /                                 controllers.Application.index
 
-GET         /listLinks             controllers.Application.listLinks
-POST        /addLink               controllers.Application.addLink
-GET         /deleteLink/:id        controllers.Application.deleteLink(id: Long)
+GET         /listLinks                        controllers.Application.listLinks
+POST        /addLink                          controllers.Application.addLink
+GET         /deleteLink/:id                   controllers.Application.deleteLink(id: Long)
 
-GET         /login                 controllers.LogIn.view
-POST        /login                 controllers.LogIn.submit
+GET         /login                            controllers.LogIn.view
+POST        /login                            controllers.LogIn.submit
 
-GET         /logout                controllers.Application.logout
+GET         /logout                           controllers.Application.logout
 
-GET         /signup                controllers.SignUp.view
-POST        /signup                controllers.SignUp.submit
+GET         /signup                           controllers.SignUp.view
+POST        /signup                           controllers.SignUp.submit
+
+GET         /account/email/:email             controllers.ActivateAccount.send(email: String)
+GET         /account/activate/:tokenId        controllers.ActivateAccount.activate(tokenId: java.util.UUID)
+
+GET         /password/forgot                 controllers.ForgotPassword.view
+POST        /password/forgot                 controllers.ForgotPassword.submit
+GET         /password/reset/:token           controllers.ResetPassword.view(token: java.util.UUID)
+POST        /password/reset/:token           controllers.ResetPassword.submit(token: java.util.UUID)
+GET         /password/change                 controllers.ChangePassword.view
+POST        /password/change                 controllers.ChangePassword.submit
 
 # Map static resources from the /public folder to the /assets URL path
-GET         /assets/*file          controllers.Assets.versioned(path="/public", file: Asset)
+GET         /assets/*file                     controllers.Assets.versioned(path="/public", file: Asset)
+#GET         /favicon.ico                      controllers.Assets.at(path="/public/images", file="favicon.png")

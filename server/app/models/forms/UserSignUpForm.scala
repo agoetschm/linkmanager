@@ -11,6 +11,7 @@ object UserSignUpForm {
   val form = Form(
     mapping(
       "username" -> nonEmptyText,
+      "email" -> email,
       "password" -> nonEmptyText
     )(UserSignUpData.apply)(UserSignUpData.unapply)
   )
