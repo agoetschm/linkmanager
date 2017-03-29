@@ -28,10 +28,8 @@ class Application @Inject()(
   extends Controller with I18nSupport {
 
 
-  def index = silhouette.SecuredAction.async { implicit req =>
-    linkDAO.linksForUser(req.identity).map { links =>
-      Ok(views.html.index(LinkForm.form, links, req.identity))
-    }
+  def index = silhouette.SecuredAction { implicit req =>
+    Ok(views.html.index(LinkForm.form, Some(req.identity)))
   }
 
   def addLink() = silhouette.SecuredAction.async { implicit req =>
@@ -84,5 +82,9 @@ class Application @Inject()(
     val result = Redirect(routes.Application.index())
     silhouette.env.eventBus.publish(LogoutEvent(request.identity, request))
     silhouette.env.authenticatorService.discard(request.authenticator, result)
+  }
+
+  def guest() = silhouette.UnsecuredAction { implicit req =>
+    Ok(views.html.index(LinkForm.form, None))
   }
 }

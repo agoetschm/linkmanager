@@ -11,18 +11,27 @@ import scala.scalajs.js.annotation.JSExport
 import scalatags.Text.all._
 import utils.ImplicitPicklers._
 
+import scala.collection.mutable
+
 
 /**
   * Main
   */
 object MainApp extends JSApp {
+
   @JSExport
   override def main(): Unit = {
-
-    if (jQuery("#links-list").length != 0)
-      loadLinks()
-    if (jQuery("#new-link-form").length != 0)
-      setupLinkForm()
+    if (jQuery("#guest").length != 0) {
+      if (jQuery("#links-list").length != 0)
+        loadLinksGuest()
+      if (jQuery("#new-link-form").length != 0)
+        setupLinkFormGuest()
+    } else {
+      if (jQuery("#links-list").length != 0)
+        loadLinks()
+      if (jQuery("#new-link-form").length != 0)
+        setupLinkForm()
+    }
   }
 
   def setupLinkForm(): Unit = {
@@ -43,7 +52,15 @@ object MainApp extends JSApp {
         val list = jQuery("#links-list")
         list.empty() // clear list
 
-        val links = read[Seq[Link]](jqXHR.responseText)
+        val links = {
+          try read[Seq[Link]](jqXHR.responseText)
+          catch {
+            case e: Exception =>
+              displayMessage("Failed to load links")
+              Seq()
+          }
+        }
+
 
         for (link <- links) {
           // TODO twirl in client https://medium.com/@muuki88/finch-scala-js-twirl-templates-b46d2123ea78#.lc3d90joj
@@ -53,7 +70,7 @@ object MainApp extends JSApp {
             onclick := "MainApp().deleteLink(" + link.id + ")",
             i(`class` := "material-icons", "delete"))
           val row = tr(
-            td(a(href := link.url, target := "_blank" /* open in new tab */, link.name)),
+            td(a(href := link.url, target := "_blank" /* open in new tab */ , link.name)),
             td(link.description),
             td(delButton)
           )
@@ -72,7 +89,12 @@ object MainApp extends JSApp {
 
     ajax("/addLink", "POST", Some(jQuery("#new-link-form").serialize()),
       successHandler = jqXHR => {
-        val result = read[RequestResult](jqXHR.responseText)
+        val result =
+          try read[RequestResult](jqXHR.responseText)
+          catch {
+            case e: Exception =>
+              RequestResult(success = false, Some(failMsg))
+          }
         println("result = " + result)
         displayMessage(
           if (result.success) successMsg
@@ -108,7 +130,13 @@ object MainApp extends JSApp {
 
     ajax("/deleteLink/" + linkId, "GET", maybeData = None,
       successHandler = jqXHR => {
-        val success = read[RequestResult](jqXHR.responseText).success
+        val success = {
+          try read[RequestResult](jqXHR.responseText)
+          catch {
+            case e: Exception =>
+              RequestResult(success = false, Some(failMsg))
+          }
+        }.success
         // toast message
         val msg = if (success) successMsg else failMsg
         displayMessage(msg)
@@ -117,6 +145,65 @@ object MainApp extends JSApp {
       },
       errorHandler = () => displayMessage(failMsg)
     )
+  }
+
+  // FAKE FUNCTIONS FOR GUEST USER
+  var lastLinkId = 1L
+  val guestLinks: mutable.HashMap[Long, Link] = mutable.HashMap()
+  guestLinks.put(1L, Link(1L, 0L, "http://example.com", "example.com", None))
+
+  def setupLinkFormGuest(): Unit = {
+    val linkForm = jQuery("#new-link-form")
+    linkForm.submit { (e: JQueryEventObject) =>
+      e.preventDefault() // prevent reload
+      postNewLinkGuest()
+    }
+  }
+
+  def loadLinksGuest(): Unit = {
+    val list = jQuery("#links-list")
+    list.empty() // clear list
+
+    for (link <- guestLinks.values) {
+      // TODO twirl in client https://medium.com/@muuki88/finch-scala-js-twirl-templates-b46d2123ea78#.lc3d90joj
+      val delButton = a(
+        `class` := "btn-flat right waves-effect",
+        //        href := "/deleteLink/" + link.id,
+        onclick := "MainApp().deleteLinkGuest(" + link.id + ")",
+        i(`class` := "material-icons", "delete"))
+      val row = tr(
+        td(a(href := link.url, target := "_blank" /* open in new tab */ , link.name)),
+        td(link.description),
+        td(delButton)
+      )
+      list.append(row.render)
+    }
+  }
+
+  def postNewLinkGuest(): Unit = {
+    val url = jQuery("#url").value().toString
+    val name = jQuery("#name").value().toString
+    val description = jQuery("#description").value().toString
+
+    lastLinkId += 1
+    val newLink = Link(lastLinkId, 0L, url,
+      if (name.length > 0) name else url.replaceFirst("https?://", ""),
+      if (description.length > 0) Some(description) else None)
+
+    guestLinks.put(lastLinkId, newLink)
+
+    // reset form and reload links
+    jQuery("#new-link-form").trigger("reset")
+    loadLinksGuest()
+  }
+
+  @JSExport
+  def deleteLinkGuest(linkId: Integer): Unit = {
+    println("delete link " + linkId)
+
+    guestLinks.remove(linkId.longValue())
+
+    loadLinksGuest()
   }
 
 

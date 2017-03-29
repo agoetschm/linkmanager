@@ -1,10 +1,19 @@
-@(linkForm: Form[models.LinkAddData], links: Seq[Link], user: User)(implicit messages: Messages, request: RequestHeader)
+@(linkForm: Form[models.LinkAddData], maybeUser: Option[User])(implicit messages: Messages, request: RequestHeader)
 
 @import helper._
 @import utils.Home
 @import views.FormHelper._
 
-@main(Messages("home.title"), Home, Some(user)) {
+@main(Messages("home.title"), Home, maybeUser) {
+    @if(maybeUser.isEmpty) {
+        <div id="guest" class="container row">
+            <div class="col s12">
+                <div class="card-panel blue lighten-2 center">
+                    <h6 class="light">@Messages("guest.warning")</h6>
+                </div>
+            </div>
+        </div>
+    }
     <div class="container row">
         <div class="col l7 m12">
             <table class="striped">
@@ -42,7 +51,9 @@
                     @textarea(linkForm("description"), '_label -> Messages("link.description.optional"),
                         'class -> "validate materialize-textarea")
 
-                    <div class="center"> <button class="btn waves-effect" type="submit">@Messages("add.link")</button></div>
+                    <div class="center">
+                        <button class="btn waves-effect" type="submit">@Messages("add.link")</button>
+                    </div>
                 </form>
                 @* }*@
             </div>

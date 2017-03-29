@@ -10,7 +10,10 @@ reset.password.title = LinkManager - Reset Password
 change.password.title = LinkManager - Change Password
 activate.account.title = LinkManager - Activate Account
 
+guest.warning = You are using the guest account and nothing will be saved!
+
 # Header
+home = Home
 sign.up = Sign up
 log.in = Log in
 log.out = Log out
@@ -41,6 +44,8 @@ link.description.optional = Small description (optional)
 add.link = Add
 
 # Log in form
+log.in.guest = Log in with a guest account
+try.now = Try now
 log.in.credentials = Log in with your credentials
 log.in.username = Username
 log.in.password = Password
