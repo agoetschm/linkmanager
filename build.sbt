@@ -1,6 +1,5 @@
 val scalaV = "2.11.8"
 
-resolvers += Resolver.jcenterRepo
 
 val webjars = Seq(
   //  "org.webjars.bower" % "jquery" % "3.1.0",
@@ -79,5 +78,7 @@ lazy val sharedJs = shared.js
 onLoad in Global := (Command.process("project server", _: State)) compose (onLoad in Global).value
 
 
-//resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
+resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
+resolvers in server += "JBoss" at "https://repository.jboss.org/"
+resolvers in server += Resolver.jcenterRepo
 //resolvers += "Atlassian Releases" at "https://maven.atlassian.com/public/"
