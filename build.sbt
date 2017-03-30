@@ -1,5 +1,6 @@
 val scalaV = "2.11.8"
 
+name := "linkmanager"
 
 val webjars = Seq(
   //  "org.webjars.bower" % "jquery" % "3.1.0",
@@ -73,6 +74,10 @@ lazy val shared = (crossProject.crossType(CrossType.Pure) in file("shared"))
 
 lazy val sharedJvm = shared.jvm
 lazy val sharedJs = shared.js
+
+//lazy val root = project.in(file("."))
+//  .aggregate(server, client, shared)
+//  .dependsOn(server, client, shared)
 
 // loads the server project at sbt startup
 onLoad in Global := (Command.process("project server", _: State)) compose (onLoad in Global).value
