@@ -1,5 +1,7 @@
 val scalaV = "2.11.8"
 
+resolvers += Resolver.jcenterRepo
+
 val webjars = Seq(
   //  "org.webjars.bower" % "jquery" % "3.1.0",
   //  "org.webjars.bower" % "materialize" % "0.97.6"
@@ -78,4 +80,4 @@ onLoad in Global := (Command.process("project server", _: State)) compose (onLoa
 
 
 //resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
-resolvers += "Atlassian Releases" at "https://maven.atlassian.com/public/"
+//resolvers += "Atlassian Releases" at "https://maven.atlassian.com/public/"
