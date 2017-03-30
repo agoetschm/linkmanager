@@ -78,3 +78,4 @@ onLoad in Global := (Command.process("project server", _: State)) compose (onLoa
 
 
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
+resolvers += "Atlassian Releases" at "https://maven.atlassian.com/public/"
