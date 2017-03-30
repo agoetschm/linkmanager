@@ -17,6 +17,7 @@ lazy val server = (project in file("server")).settings(
     //anorm,
     cache,
     ws,
+    filters,
     "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % Test,
 
     // database

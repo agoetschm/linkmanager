@@ -44,7 +44,9 @@
                 <h5 class="center">@Messages("new.link")</h5>
                 @* @form(action = routes.Application.addLink) {*@
                 <form id="new-link-form">
+                    @helper.CSRF.formField
                     @inputText(linkForm("url"), '_label -> Messages("link.url"), 'type -> "url",
+                        'placeholder -> "http://...",
                         'required -> "true", 'class -> "validate", '_showConstraints -> false)
                     @inputText(linkForm("name"), '_label -> Messages("link.name.optional"),
                         'class -> "validate", '_showConstraints -> false)

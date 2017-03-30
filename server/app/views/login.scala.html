@@ -24,6 +24,7 @@
             <div class="card-panel">
                 <h5 class="center">@Messages("log.in.credentials")</h5>
                 @form(action = routes.LogIn.submit()) {
+                    @helper.CSRF.formField
                     @inputText(userForm("username"), '_label -> Messages("log.in.username"),
                         'required -> "true", 'class -> "validate", '_showConstraints -> false)
                     @inputPassword(userForm("password"), '_label -> Messages("log.in.password"),

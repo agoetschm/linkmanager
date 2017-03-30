@@ -26,6 +26,7 @@ username.taken = Username already taken, choose an other one.
 email.taken = There is already an account for this email, please log in.
 access.denied = Access denied!
 could.not.authenticate = Could not authenticate with social provider! Please try again!
+non.https.hint = Since this website does not use https (yet), you should not use the same password as on an other website.
 
 # Links list
 link.link = Link
