@@ -77,5 +77,5 @@ lazy val sharedJs = shared.js
 onLoad in Global := (Command.process("project server", _: State)) compose (onLoad in Global).value
 
 
-resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
+//resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
 resolvers += "Atlassian Releases" at "https://maven.atlassian.com/public/"
