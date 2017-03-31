@@ -64,10 +64,12 @@ object MainApp extends JSApp {
 
         for (link <- links) {
           // TODO twirl in client https://medium.com/@muuki88/finch-scala-js-twirl-templates-b46d2123ea78#.lc3d90joj
+          val delButId = "deleteLink" + link.id
           val delButton = a(
+            id := delButId,
             `class` := "btn-flat right waves-effect",
             //        href := "/deleteLink/" + link.id,
-            onclick := "MainApp().deleteLink(" + link.id + ")",
+//            onclick := "MainApp().deleteLink(" + link.id + ")",
             i(`class` := "material-icons", "delete"))
           val row = tr(
             td(a(href := link.url, target := "_blank" /* open in new tab */ , link.name)),
@@ -75,6 +77,8 @@ object MainApp extends JSApp {
             td(delButton)
           )
           list.append(row.render)
+          val deleteListener: JQueryEventObject => Unit = { e: JQueryEventObject => deleteLink(link) }
+          jQuery("#" + delButId).click(deleteListener)
         }
       },
       errorHandler = () => displayMessage("Failed to load links")
@@ -109,26 +113,25 @@ object MainApp extends JSApp {
   }
 
 
-  @JSExport
-  def deleteLink(linkId: Integer /* should be Long, but then needs 'L' */): Unit = {
-    println("delete link " + linkId)
+  def deleteLink(link: Link): Unit = {
+    println("delete link " + link.id)
 
     // modify the modal callback to delete the right link
     val confirmBut = jQuery("#button-confirm-delete-link")
     confirmBut.off("click") // remove old handler
     confirmBut.click((e: JQueryEventObject) => {
-      println("confirm delete link " + linkId)
-      performDeleteLink(linkId)
+      println("confirm delete link " + link.id)
+      performDeleteLink(link)
     })
     // open the modal
     Modal.confirmDeleteLink("modal-delete-link")
   }
 
-  def performDeleteLink(linkId: Integer): Unit = {
+  def performDeleteLink(link: Link): Unit = {
     val successMsg = "Successfully deleted link"
     val failMsg = "Deletion of link failed"
 
-    ajax("/deleteLink/" + linkId, "GET", maybeData = None,
+    ajax("/deleteLink/" + link.id, "GET", maybeData = None,
       successHandler = jqXHR => {
         val success = {
           try read[RequestResult](jqXHR.responseText)
@@ -165,11 +168,12 @@ object MainApp extends JSApp {
     list.empty() // clear list
 
     for (link <- guestLinks.values) {
-      // TODO twirl in client https://medium.com/@muuki88/finch-scala-js-twirl-templates-b46d2123ea78#.lc3d90joj
+      val delButId = "deleteLink" + link.id
       val delButton = a(
+        id := delButId,
         `class` := "btn-flat right waves-effect",
         //        href := "/deleteLink/" + link.id,
-        onclick := "MainApp().deleteLinkGuest(" + link.id + ")",
+        //        onclick := "MainApp().deleteLinkGuest(" + link.id + ")", // doesn't work with CSP!
         i(`class` := "material-icons", "delete"))
       val row = tr(
         td(a(href := link.url, target := "_blank" /* open in new tab */ , link.name)),
@@ -177,6 +181,8 @@ object MainApp extends JSApp {
         td(delButton)
       )
       list.append(row.render)
+      val deleteListener: JQueryEventObject => Unit = { e: JQueryEventObject => deleteLinkGuest(link) }
+      jQuery("#" + delButId).click(deleteListener)
     }
   }
 
@@ -197,11 +203,10 @@ object MainApp extends JSApp {
     loadLinksGuest()
   }
 
-  @JSExport
-  def deleteLinkGuest(linkId: Integer): Unit = {
-    println("delete link " + linkId)
+  def deleteLinkGuest(link: Link): Unit = {
+    println("delete link " + link.id)
 
-    guestLinks.remove(linkId.longValue())
+    guestLinks.remove(link.id)
 
     loadLinksGuest()
   }
