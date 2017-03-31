@@ -13,13 +13,14 @@
                 <h5 class="center">@Messages("sign.up.account")</h5>
 
                 @form(action = routes.SignUp.submit()) {
+                    @helper.CSRF.formField
                     @inputText(userForm("username"), '_label -> Messages("sign.up.username"),
                         'required -> "true", 'class -> "validate", '_showConstraints -> false)
                     @inputText(userForm("email"), '_label -> Messages("sign.up.email"), 'type -> "email",
                         'required -> "true", 'class -> "validate", '_showConstraints -> false)
                     @inputPassword(userForm("password"), '_label -> Messages("sign.up.password"),
                         'required -> "true", 'class -> "validate", '_showConstraints -> false)
-
+                    <span><i>@Messages("non.https.hint")</i></span>
                     <div class="center"> <button class="btn waves-effect" type="submit">
                         @Messages("sign.up.now")
                     </button></div>

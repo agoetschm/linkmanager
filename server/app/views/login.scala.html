@@ -10,17 +10,30 @@
             @alerts()
 
             <div class="card-panel">
+                <h5 class="center">@Messages("log.in.guest")</h5>
+
+                <div class="center">
+                    <a href="@routes.Application.guest()" class="btn waves-effect">
+                    @Messages("try.now")</a>
+                </div>
+            </div>
+            <div class="row center">
+                <h6>OR</h6>
+            </div>
+
+            <div class="card-panel">
                 <h5 class="center">@Messages("log.in.credentials")</h5>
                 @form(action = routes.LogIn.submit()) {
+                    @helper.CSRF.formField
                     @inputText(userForm("username"), '_label -> Messages("log.in.username"),
                         'required -> "true", 'class -> "validate", '_showConstraints -> false)
                     @inputPassword(userForm("password"), '_label -> Messages("log.in.password"),
                         'required -> "true", 'class -> "validate", '_showConstraints -> false)
-                    
+
                     <div class="center"> <button class="btn waves-effect" type="submit">
                     @Messages("log.in.now")
                     </button></div>
-                    
+
                     <p class="center"><a href="@routes.ForgotPassword.view()">
                     @Messages("forgot.your.password")</a></p>
                 }

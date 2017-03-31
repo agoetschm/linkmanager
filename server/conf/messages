@@ -10,7 +10,10 @@ reset.password.title = LinkManager - Reset Password
 change.password.title = LinkManager - Change Password
 activate.account.title = LinkManager - Activate Account
 
+guest.warning = You are using the guest account and nothing will be saved!
+
 # Header
+home = Home
 sign.up = Sign up
 log.in = Log in
 log.out = Log out
@@ -23,6 +26,7 @@ username.taken = Username already taken, choose an other one.
 email.taken = There is already an account for this email, please log in.
 access.denied = Access denied!
 could.not.authenticate = Could not authenticate with social provider! Please try again!
+non.https.hint = Since this website does not use https (yet), you should not use the same password as on an other website.
 
 # Links list
 link.link = Link
@@ -41,6 +45,8 @@ link.description.optional = Small description (optional)
 add.link = Add
 
 # Log in form
+log.in.guest = Log in with a guest account
+try.now = Try now
 log.in.credentials = Log in with your credentials
 log.in.username = Username
 log.in.password = Password

@@ -1,5 +1,7 @@
 val scalaV = "2.11.8"
 
+name := "linkmanager"
+
 val webjars = Seq(
   //  "org.webjars.bower" % "jquery" % "3.1.0",
   //  "org.webjars.bower" % "materialize" % "0.97.6"
@@ -17,6 +19,7 @@ lazy val server = (project in file("server")).settings(
     //anorm,
     cache,
     ws,
+    filters,
     "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % Test,
 
     // database
@@ -72,8 +75,15 @@ lazy val shared = (crossProject.crossType(CrossType.Pure) in file("shared"))
 lazy val sharedJvm = shared.jvm
 lazy val sharedJs = shared.js
 
+//lazy val root = project.in(file("."))
+//  .aggregate(server, client, shared)
+//  .dependsOn(server, client, shared)
+
 // loads the server project at sbt startup
 onLoad in Global := (Command.process("project server", _: State)) compose (onLoad in Global).value
 
 
-resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
+//resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
+resolvers in server += "JBoss" at "https://repository.jboss.org/"
+resolvers in server += Resolver.jcenterRepo
+//resolvers += "Atlassian Releases" at "https://maven.atlassian.com/public/"

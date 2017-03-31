@@ -7,6 +7,7 @@
 @menu() = @{
     maybeUser match {
         case Some(user) =>
+            <li><a href='/'>{Messages("home")}</a></li>
             <li>
                 <a class="dropdown-button" href="#!" data-activates="logout-dropdown">
                 {user.username}<i class="material-icons right">arrow_drop_down</i>
