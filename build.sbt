@@ -75,15 +75,11 @@ lazy val shared = (crossProject.crossType(CrossType.Pure) in file("shared"))
 lazy val sharedJvm = shared.jvm
 lazy val sharedJs = shared.js
 
-//lazy val root = project.in(file("."))
-//  .aggregate(server, client, shared)
-//  .dependsOn(server, client, shared)
+//resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
+resolvers += "JBoss" at "https://repository.jboss.org/"
+resolvers in server += Resolver.jcenterRepo
+//resolvers += "Atlassian Releases" at "https://maven.atlassian.com/public/"
 
 // loads the server project at sbt startup
 onLoad in Global := (Command.process("project server", _: State)) compose (onLoad in Global).value
 
-
-//resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
-resolvers in server += "JBoss" at "https://repository.jboss.org/"
-resolvers in server += Resolver.jcenterRepo
-//resolvers += "Atlassian Releases" at "https://maven.atlassian.com/public/"
