@@ -8,7 +8,7 @@ import play.api.data.validation.{Constraint, Invalid, Valid}
 /**
   * Link creation form
   */
-object LinkForm {
+object NewLinkForm {
   private val urlRegex = "(^|[\\s.:;?\\-\\]<\\(])(https?://[-\\w;/?:@&=+$\\|\\_.!~*\\|'()\\[\\]%#,☺]+[\\w/#](\\(\\))?)(?=$|[\\s',\\|\\(\\).:;?\\-\\[\\]>\\)])"
   private val urlContraint = Constraint[String] { s: String =>
     if (s.matches(urlRegex))

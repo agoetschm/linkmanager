@@ -5,7 +5,7 @@ import com.google.inject.Inject
 import com.mohiva.play.silhouette.api.{LogoutEvent, Silhouette}
 import models.Link
 import models.daos.LinkDAO
-import models.forms.LinkForm
+import models.forms.NewLinkForm
 import play.api.Logger
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc._
@@ -15,7 +15,6 @@ import utils.auth.{BeingOwnerOf, DefaultEnv}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-
 import utils.ImplicitPicklers._
 
 /**
@@ -29,11 +28,11 @@ class Application @Inject()(
 
 
   def index = silhouette.SecuredAction { implicit req =>
-    Ok(views.html.index(LinkForm.form, Some(req.identity)))
+    Ok(views.html.index(NewLinkForm.form, Some(req.identity)))
   }
 
   def addLink() = silhouette.SecuredAction.async { implicit req =>
-    LinkForm.form.bindFromRequest.fold(
+    NewLinkForm.form.bindFromRequest.fold(
       errorForm => {
         Logger.warn("error : " + errorForm.errors)
         // only first error msg
@@ -49,10 +48,11 @@ class Application @Inject()(
           userId = req.identity.id,
           url = successData.url,
           name = name,
-          description = successData.description)
+          description = successData.description,
+          parentId = None)
         ) map {
           maybeNewId =>
-            Logger.debug("new link with id " + maybeNewId)
+            Logger.info("new link with id " + maybeNewId)
             val result = RequestResult(maybeNewId.isDefined)
             Ok(write(result))
         }
@@ -63,7 +63,7 @@ class Application @Inject()(
   def deleteLink(linkId: Long) =
     silhouette.SecuredAction(BeingOwnerOf[DefaultEnv#A](linkId)(linkDAO)).async {
       linkDAO.delete(linkId) map { success =>
-        Logger.debug("delete success = " + success)
+        Logger.info("delete success = " + success)
         Ok(write(RequestResult(success)))
       }
     }
@@ -85,6 +85,6 @@ class Application @Inject()(
   }
 
   def guest() = silhouette.UnsecuredAction { implicit req =>
-    Ok(views.html.index(LinkForm.form, None))
+    Ok(views.html.index(NewLinkForm.form, None))
   }
 }

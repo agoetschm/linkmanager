@@ -1,17 +1,15 @@
 
 import models.Link
 import org.scalajs.jquery.{JQueryAjaxSettings, JQueryEventObject, JQueryXHR, jQuery}
-import upickle.Invalid
 import upickle.default._
+import utils.ImplicitPicklers._
 import utils.RequestResult
 
+import scala.collection.mutable
 import scala.scalajs.js
 import scala.scalajs.js.JSApp
 import scala.scalajs.js.annotation.JSExport
 import scalatags.Text.all._
-import utils.ImplicitPicklers._
-
-import scala.collection.mutable
 
 
 /**
@@ -153,7 +151,7 @@ object MainApp extends JSApp {
   // FAKE FUNCTIONS FOR GUEST USER
   var lastLinkId = 1L
   val guestLinks: mutable.HashMap[Long, Link] = mutable.HashMap()
-  guestLinks.put(1L, Link(1L, 0L, "http://example.com", "example.com", None))
+  guestLinks.put(1L, Link(1L, 0L, "http://example.com", "example.com", None, None))
 
   def setupLinkFormGuest(): Unit = {
     val linkForm = jQuery("#new-link-form")
@@ -194,7 +192,8 @@ object MainApp extends JSApp {
     lastLinkId += 1
     val newLink = Link(lastLinkId, 0L, url,
       if (name.length > 0) name else url.replaceFirst("https?://", ""),
-      if (description.length > 0) Some(description) else None)
+      if (description.length > 0) Some(description) else None,
+      None)
 
     guestLinks.put(lastLinkId, newLink)
 
