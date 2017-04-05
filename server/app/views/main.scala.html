@@ -23,7 +23,12 @@
         </header>
 
         <main>
-        @content
+            <div id="progress"  class="container scale-transition scale-out">
+                    <div class="progress">
+                        <div class="indeterminate"></div>
+                    </div>
+            </div>
+            @content
         </main>
 
         <footer>
@@ -37,12 +42,12 @@
         @*jQuery is already in the scala-js dependencies*@
         @*<script src="@routes.Assets.versioned("lib/jquery/dist/jquery.min.js")"></script>*@
         @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>*@
-        
+
             <!-- Compiled and minified JavaScript -->
         @*<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/js/materialize.min.js"></script>*@
         <script src="@routes.Assets.versioned("javascripts/materialize.min.js")" type="text/javascript"></script>
-        
+
         <script src="@routes.Assets.versioned("javascripts/init.js")" type="text/javascript"></script>
-        
+
     </body>
 </html>

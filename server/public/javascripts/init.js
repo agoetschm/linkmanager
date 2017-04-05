@@ -2,8 +2,7 @@ if (window.console) {
     console.log("Welcome to your Play application's JavaScript!");
 }
 (function ($) {
-    $(function () {
-
+    $(function () {        
         $('.button-collapse').sideNav();
 
         $(".dropdown-button").dropdown({hover: true, belowOrigin: true});
