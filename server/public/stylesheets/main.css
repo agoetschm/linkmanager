@@ -8,6 +8,10 @@ main {
     flex: 1 0 auto;
 }
 
-.collapsible-body{
+.collapsible-body {
     padding: 0.5rem;
+}
+
+.no-margin-bottom {
+    margin-bottom: 0;
 }

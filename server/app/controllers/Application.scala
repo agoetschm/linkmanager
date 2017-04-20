@@ -3,8 +3,8 @@ package controllers
 
 import com.google.inject.Inject
 import com.mohiva.play.silhouette.api.{LogoutEvent, Silhouette}
-import models.Link
-import models.daos.LinkDAO
+import models.{Folder, Link}
+import models.daos.{FolderDAO, LinkDAO}
 import models.forms.NewLinkForm
 import play.api.Logger
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -23,6 +23,7 @@ import utils.ImplicitPicklers._
 class Application @Inject()(
                              silhouette: Silhouette[DefaultEnv],
                              linkDAO: LinkDAO,
+                             folderDAO: FolderDAO,
                              val messagesApi: MessagesApi)
   extends Controller with I18nSupport {
 
@@ -70,10 +71,16 @@ class Application @Inject()(
 
   def listLinks = silhouette.SecuredAction.async { implicit req =>
     linkDAO.linksForUser(req.identity).map { links =>
-      val pickeled = write[Seq[Link]](links)
+      val pickled = write[Seq[Link]](links)
       //      val pickeled = write[Seq[Int]](Seq(1, 2, 3))
       assert(implicitly[Reader[Link]] eq implicitly[Reader[Link]])
-      Ok(pickeled)
+      Ok(pickled)
+    }
+  }
+  def listFolders = silhouette.SecuredAction.async { implicit req =>
+    folderDAO.foldersForUser(req.identity).map { folders =>
+      val pickled = write[Seq[Folder]](folders)
+      Ok(pickled)
     }
   }
 

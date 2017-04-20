@@ -10,5 +10,10 @@ object Materialize extends js.Object {
 
 @js.native
 object Modal extends js.Object {
-  def confirmDeleteLink(modalId: String): Unit = js.native
+  def confirmDelete(modalId: String): Unit = js.native
+}
+
+@js.native
+object Collapsible extends js.Object {
+  def activate(): Unit = js.native
 }

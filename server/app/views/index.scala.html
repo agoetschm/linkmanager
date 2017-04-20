@@ -1,136 +1,158 @@
 @(linkForm: Form[models.LinkAddData], maybeUser: Option[User])(implicit messages: Messages, request: RequestHeader)
 
-    @import helper._
-    @import utils.Home
-    @import views.FormHelper._
+@import helper._
+@import utils.Home
+@import views.FormHelper._
 
-    @main(Messages("home.title"), Home, maybeUser) {
-        @if(maybeUser.isEmpty) {
-            <div id="guest" class="container row">
-                <div class="col s12">
-                    <div class="card-panel blue lighten-2 center">
-                        <h6 class="light">@Messages("guest.warning")</h6>
-                    </div>
-                </div>
-            </div>
-        }
-        <div class="container row">
-            <div class="col l7 m12">
-                <table class="striped">
-                    <thead>
-                        <tr>
-                            <th>@Messages("link.link")</th>
-                            <th>@Messages("link.description")</th>
-                        </tr>
-                    </thead>
-                    <tbody id="links-list"></tbody>
-                </table>
-
-                @*the confirm deletion modal*@
-                <div id="modal-delete-link" class="modal">
-                    <div class="modal-content">
-                        <h5 class="center">@Messages("delete.link.modal")</h5>
-                    </div>
-                    <div class="modal-footer">
-                        <a id="button-confirm-delete-link" href="#" class="modal-action modal-close waves-effect waves-green btn-flat">
-                        @Messages("delete.link.confirm")</a>
-                        <a href="#" class="modal-action modal-close waves-effect waves-red btn-flat">@Messages("delete.link.cancel")</a>
-                    </div>
-                </div>
-                @*TODO why not http://demo.geekslabs.com/materialize-v1.0/advanced-ui-nestable.html*@
-                @*https://github.com/dbushell/Nestable*@
-                <ul class="collapsible" data-collapsible="accordion">
-                    <li>
-                        <div class="collapsible-header">
-                            <i class="material-icons">folder</i>Folder 1</div>
-                        <div class="collapsible-body">
-
-                            <ul class="collapsible" data-collapsible="accordion">
-                                <li>
-                                    <div class="collapsible-header">
-                                        <i class="material-icons">link</i>Link 1</div>
-                                    <div class="collapsible-body">
-                                        <p>Description</p>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="collapsible-header">
-                                        <i class="material-icons">link</i>Link 2</div>
-                                    <div class="collapsible-body">
-                                        <p>Lorem ipsum dolor sit amet.</p>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="collapsible-header">
-                            <i class="material-icons">folder</i>Second folder</div>
-                        <div class="collapsible-body">
-                            <ul class="collapsible" data-collapsible="accordion">
-                                <li>
-                                    <div class="collapsible-header">
-                                        <i class="material-icons">link</i>Link 1</div>
-                                    <div class="collapsible-body">
-                                        <p>Description</p>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="collapsible-header">
-                                        <i class="material-icons">link</i>Link 2</div>
-                                    <div class="collapsible-body">
-                                        <p>Lorem ipsum dolor sit amet.</p>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="col l5 m8 offset-m2 s12">
-                <div class="card">
-                    <div class="card-tabs">
-                        <ul class="tabs tabs-fixed-width">
-                            <li class="tab"><a class="active" href="#new-link">@Messages("new.link")</a></li>
-                            <li class="tab"><a href="#new-folder">@Messages("new.folder")</a></li>
-                        </ul>
-                    </div>
-                    <div class="card-content">
-                        <div id="new-link" >
-                            <form id="new-link-form">
-                                @helper.CSRF.formField
-                                @inputText(linkForm("url"), '_label -> Messages("link.url"), 'type -> "url",
-                                    'placeholder -> "http://...",
-                                    'required -> "true", 'class -> "validate", '_showConstraints -> false)
-                                @inputText(linkForm("name"), '_label -> Messages("link.name.optional"),
-                                    'class -> "validate", '_showConstraints -> false)
-                                @textarea(linkForm("description"), '_label -> Messages("link.description.optional"),
-                                    'class -> "validate materialize-textarea")
-
-                                <div class="center">
-                                    <button class="btn waves-effect" type="submit">@Messages("add.link")</button>
-                                </div>
-                            </form>
-                        </div>
-                        <div id="new-folder" >
-                            <form id="new-folder-form">
-                                @helper.CSRF.formField
-                                @inputText(linkForm("url"), '_label -> Messages("link.url"), 'type -> "url",
-                                    'placeholder -> "http://...",
-                                    'required -> "true", 'class -> "validate", '_showConstraints -> false)
-                                @inputText(linkForm("name"), '_label -> Messages("link.name.optional"),
-                                    'class -> "validate", '_showConstraints -> false)
-                                @textarea(linkForm("description"), '_label -> Messages("link.description.optional"),
-                                    'class -> "validate materialize-textarea")
-
-                                <div class="center">
-                                    <button class="btn waves-effect" type="submit">@Messages("add.link")</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+@main(Messages("home.title"), Home, maybeUser) {
+    @if(maybeUser.isEmpty) {
+        <div id="guest" class="container row">
+            <div class="col s12">
+                <div class="card-panel blue lighten-2 center">
+                    <h6 class="light">@Messages("guest.warning")</h6>
                 </div>
             </div>
         </div>
     }
+    <div class="container row">
+        <div class="col l7 m12 12">
+            @*<table class="striped">
+                <thead>
+                    <tr>
+                        <th>@Messages("link.link")</th>
+                        <th>@Messages("link.description")</th>
+                    </tr>
+                </thead>
+                <tbody id="links-list"></tbody>
+            </table>*@
+
+            @*the confirm deletion modal*@
+            <div id="modal-delete-link" class="modal">
+                <div class="modal-content">
+                    <h5 class="center">@Messages("delete.link.modal")</h5>
+                </div>
+                <div class="modal-footer">
+                    <a id="button-confirm-delete-link" href="#" class="modal-action modal-close waves-effect waves-green btn-flat">
+                    @Messages("delete.link.confirm")</a>
+                    <a href="#" class="modal-action modal-close waves-effect waves-red btn-flat">@Messages("delete.link.cancel")</a>
+                </div>
+            </div>
+            <div id="modal-delete-folder" class="modal">
+                <div class="modal-content">
+                    <h5 class="center">@Messages("delete.folder.modal")</h5>
+                </div>
+                <div class="modal-footer">
+                    <a id="button-confirm-delete-folder" href="#" class="modal-action modal-close waves-effect waves-green btn-flat">
+                    @Messages("delete.link.confirm")</a>
+                    <a href="#" class="modal-action modal-close waves-effect waves-red btn-flat">@Messages("delete.link.cancel")</a>
+                </div>
+            </div>
+
+            @*TODO why not http://demo.geekslabs.com/materialize-v1.0/advanced-ui-nestable.html*@
+            @*https://github.com/dbushell/Nestable*@
+            <ul id="links-collection" class="collapsible" data-collapsible="accordion">
+                
+            </ul>
+            @*<ul class="collapsible" data-collapsible="accordion">
+                <li>
+                    <div class="collapsible-header">
+                        <i class="material-icons">folder</i>Folder 1
+                    </div>
+                    <div class="collapsible-body">
+                        <div class="collection">
+                            <div class="collection-item">
+                                <a href="#!" class="tooltipped" data-tooltip="test">Link 1</a>
+                            </div>
+                            <div class="collection-item">
+                                <a href="#!" class="tooltipped" data-tooltip="test">Link 1</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="collapsible-header">
+                        <i class="material-icons">folder</i>Second folder</div>
+                    <div class="collapsible-body">
+                        <ul class="collapsible" data-collapsible="accordion">
+                            <li>
+                                <div class="collapsible-header">
+                                    <i class="material-icons">link</i>Link 1</div>
+                                <div class="collapsible-body" >
+                                    <p>Description</p>
+                                    <div class="row no-margin-bottom">
+                                        <div class="col s6 m3 offset-m3 center"><a href="#!" class="btn waves-light"><i class="material-icons">
+                                            open_in_browser</i></a></div>
+                                        <div class="col s6 m3 center"><a href="#!" class="btn-flat waves-light"><i class="material-icons">
+                                            delete</i></a></div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="collapsible-header">
+                                    <i class="material-icons">link</i>Link 2</div>
+                                <div class="collapsible-body">
+                                    <div class="row no-margin-bottom">
+                                        <div class="col s6 m3 offset-m3 center"><a href="#!" class="btn waves-light"><i class="material-icons">
+                                            open_in_browser</i></a></div>
+                                        <div class="col s6 m3 center"><a href="#!" class="btn-flat waves-light"><i class="material-icons">
+                                            delete</i></a></div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+
+                        <div class="row no-margin-bottom">
+                            <div class="col s12 center"><a href="#!" class="btn-flat waves-light"><i class="material-icons">
+                                delete</i></a></div>
+                        </div>
+                    </div>
+                </li>
+            </ul>*@
+        </div>
+
+        <div class="col l5 m8 offset-m2 s12">
+            <div class="card">
+                <div class="card-tabs">
+                    <ul class="tabs tabs-fixed-width">
+                        <li class="tab"><a class="active" href="#new-link">@Messages("new.link")</a></li>
+                        <li class="tab"><a href="#new-folder">@Messages("new.folder")</a></li>
+                    </ul>
+                </div>
+                <div class="card-content">
+                    <div id="new-link" >
+                        <form id="new-link-form">
+                            @helper.CSRF.formField
+                            @inputText(linkForm("url"), '_label -> Messages("link.url"), 'type -> "url",
+                                'placeholder -> "http://...",
+                                'required -> "true", 'class -> "validate", '_showConstraints -> false)
+                            @inputText(linkForm("name"), '_label -> Messages("link.name.optional"),
+                                'class -> "validate", '_showConstraints -> false)
+                            @textarea(linkForm("description"), '_label -> Messages("link.description.optional"),
+                                'class -> "validate materialize-textarea")
+
+                            <div class="center">
+                                <button class="btn waves-effect" type="submit">@Messages("add.link")</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div id="new-folder" >
+                        <form id="new-folder-form">
+                            @helper.CSRF.formField
+                            @inputText(linkForm("url"), '_label -> Messages("link.url"), 'type -> "url",
+                                'placeholder -> "http://...",
+                                'required -> "true", 'class -> "validate", '_showConstraints -> false)
+                            @inputText(linkForm("name"), '_label -> Messages("link.name.optional"),
+                                'class -> "validate", '_showConstraints -> false)
+                            @textarea(linkForm("description"), '_label -> Messages("link.description.optional"),
+                                'class -> "validate materialize-textarea")
+
+                            <div class="center">
+                                <button class="btn waves-effect" type="submit">@Messages("add.link")</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

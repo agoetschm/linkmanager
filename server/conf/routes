@@ -5,6 +5,7 @@
 GET         /                                 controllers.Application.index
 
 GET         /listLinks                        controllers.Application.listLinks
+GET         /listFolders                      controllers.Application.listFolders
 POST        /addLink                          controllers.Application.addLink
 GET         /deleteLink/:id                   controllers.Application.deleteLink(id: Long)
 

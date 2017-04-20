@@ -16,6 +16,12 @@ if (window.console) {
 
 function Modal() {
 }
-Modal.confirmDeleteLink = function (modalId) {
+Modal.confirmDelete = function (modalId) {
     $("#" + modalId).modal("open");
+};
+
+function Collapsible() {
+}
+Collapsible.activate = function () {
+    $(".collapsible").collapsible();
 };
