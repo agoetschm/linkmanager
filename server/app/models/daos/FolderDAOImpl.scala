@@ -14,7 +14,7 @@ import scala.concurrent.Future
   * Implementation of the folder dao
   */
 class FolderDAOImpl @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
-  extends FolderDAO with HasDatabaseConfigProvider[JdbcProfile] {
+  extends EntityDAO[Folder] with HasDatabaseConfigProvider[JdbcProfile] {
 
 
   import dbConfig.driver.api._
@@ -40,6 +40,6 @@ class FolderDAOImpl @Inject()(protected val dbConfigProvider: DatabaseConfigProv
   def get(id: Long): Future[Option[Folder]] =
     db.run(folders.filter(_.id === id).result.headOption)
 
-  def foldersForUser(user: User): Future[Seq[Folder]] =
+  def allForUser(user: User): Future[Seq[Folder]] =
     db.run(folders.filter(_.userId === user.id).result)
 }

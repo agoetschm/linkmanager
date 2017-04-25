@@ -1,13 +1,8 @@
-import com.google.inject.Inject
-import com.mohiva.play.silhouette.api.Silhouette
 import controllers.Application
-import models.daos.LinkDAO
 import org.scalatestplus.play._
-import play.api.i18n.MessagesApi
 import play.api.mvc._
 import play.api.test.Helpers._
 import play.api.test._
-import utils.auth.DefaultEnv
 
 import scala.concurrent.Future
 

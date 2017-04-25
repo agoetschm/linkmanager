@@ -45,6 +45,7 @@ link.url = URL
 link.name.optional = Name (optional)
 link.description.optional = Small description (optional)
 add.link = Add
+folder.name = Name
 
 # Log in form
 log.in.guest = Log in with a guest account

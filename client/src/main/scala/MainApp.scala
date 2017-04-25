@@ -35,16 +35,21 @@ object MainApp extends JSApp {
     if (jQuery("#links-collection").length != 0)
       loadLinks()
     if (jQuery("#new-link-form").length != 0)
-      setupLinkForm()
+      setupForms()
   }
 
-  def setupLinkForm(): Unit = {
+  def setupForms(): Unit = {
     val linkForm = jQuery("#new-link-form")
     linkForm.submit { (e: JQueryEventObject) =>
       e.preventDefault() // prevent reload
       postNewLink()
     }
-    // TODO folder add
+
+    val folderForm = jQuery("#new-folder-form")
+    folderForm.submit { (e: JQueryEventObject) =>
+      e.preventDefault() // prevent reload
+      postNewFolder()
+    }
   }
 
 
@@ -159,6 +164,28 @@ object MainApp extends JSApp {
       )
       // reset form and reload links
       jQuery("#new-link-form").trigger("reset")
+      loadLinks()
+    }
+  }
+
+  def postNewFolder(): Unit = {
+    println("new folder")
+
+    val successMsg = "Successfully added a new folder"
+    val failMsg = "The creation of the new folder failed."
+
+    folderDAO.post("new-folder-form").recover {
+      case e: ClientException =>
+        println("error on post new folder: " + e.getMessage)
+        displayMessage(failMsg)
+        RequestResult(success = false, None)
+    }.map { result =>
+      displayMessage(
+        if (result.success) successMsg
+        else failMsg + " " + result.error.getOrElse("")
+      )
+      // reset form and reload links
+      jQuery("#new-folder-form").trigger("reset")
       loadLinks()
     }
   }
@@ -354,7 +381,7 @@ object MainApp extends JSApp {
               p.failure(UPickleException("failed to parse result of folder creation"))
           }
         },
-        errorHandler = () => p.failure(AjaxException("failed to create a new folder"))
+        errorHandler = () => p.failure(AjaxException("failed to create a new foldercd SDocd"))
       )
       p.future
     }
@@ -393,11 +420,11 @@ object MainApp extends JSApp {
   }
 
   object FolderDAOGuestImpl extends DAO[Folder] {
-    var lastFolderId = 1L
     val guestFolders: mutable.HashMap[Long, Folder] = mutable.HashMap()
     guestFolders.put(1L, Folder(1L, 0L, "Folder 1", None))
     guestFolders.put(2L, Folder(2L, 0L, "Folder 2", None))
     guestFolders.put(3L, Folder(3L, 0L, "Folder 3", Some(1L)))
+    var lastFolderId = 3L
 
     override def getAll = Future.successful(guestFolders.values.toSeq)
 
@@ -408,7 +435,6 @@ object MainApp extends JSApp {
     }
 
     override def post(formId: String) = {
-      // TODO
       val name = jQuery("#" + formId + " #name").value().toString
 
       lastFolderId += 1

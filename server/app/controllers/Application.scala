@@ -3,33 +3,33 @@ package controllers
 
 import com.google.inject.Inject
 import com.mohiva.play.silhouette.api.{LogoutEvent, Silhouette}
+import models.daos.EntityDAO
+import models.forms.{NewFolderForm, NewLinkForm}
 import models.{Folder, Link}
-import models.daos.{FolderDAO, LinkDAO}
-import models.forms.NewLinkForm
 import play.api.Logger
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc._
 import upickle.default._
+import utils.ImplicitPicklers._
 import utils.RequestResult
 import utils.auth.{BeingOwnerOf, DefaultEnv}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import utils.ImplicitPicklers._
 
 /**
   * Home controller
   */
 class Application @Inject()(
                              silhouette: Silhouette[DefaultEnv],
-                             linkDAO: LinkDAO,
-                             folderDAO: FolderDAO,
+                             linkDAO: EntityDAO[Link],
+                             folderDAO: EntityDAO[Folder],
                              val messagesApi: MessagesApi)
   extends Controller with I18nSupport {
 
 
   def index = silhouette.SecuredAction { implicit req =>
-    Ok(views.html.index(NewLinkForm.form, Some(req.identity)))
+    Ok(views.html.index(NewLinkForm.form, NewFolderForm.form, Some(req.identity)))
   }
 
   def addLink() = silhouette.SecuredAction.async { implicit req =>
@@ -61,24 +61,54 @@ class Application @Inject()(
     )
   }
 
+  def addFolder() = silhouette.SecuredAction.async { implicit req =>
+    NewFolderForm.form.bindFromRequest.fold(
+      errorForm => {
+        val errorStr: String = errorForm.errors.map(e => "The field '" + e.key + "' " + e.message).mkString(" ")
+        Future.successful(Ok(write(RequestResult(success = false, Some(errorStr)))))
+      },
+      successData => {
+        folderDAO.add(Folder(id = 0,
+          userId = req.identity.id,
+          name = successData.name,
+          parentId = None)
+        ) map {
+          maybeNewId =>
+            Logger.info("new folder with id " + maybeNewId)
+            val result = RequestResult(maybeNewId.isDefined)
+            Ok(write(result))
+        }
+      }
+    )
+  }
+
   def deleteLink(linkId: Long) =
-    silhouette.SecuredAction(BeingOwnerOf[DefaultEnv#A](linkId)(linkDAO)).async {
+    silhouette.SecuredAction(BeingOwnerOf[DefaultEnv#A, Link](linkId)(linkDAO)).async {
       linkDAO.delete(linkId) map { success =>
+        Logger.info("delete success = " + success)
+        Ok(write(RequestResult(success)))
+      }
+    }
+  
+  def deleteFolder(folderId: Long) =
+    silhouette.SecuredAction(BeingOwnerOf[DefaultEnv#A, Folder](folderId)(folderDAO)).async {
+      folderDAO.delete(folderId) map { success =>
         Logger.info("delete success = " + success)
         Ok(write(RequestResult(success)))
       }
     }
 
   def listLinks = silhouette.SecuredAction.async { implicit req =>
-    linkDAO.linksForUser(req.identity).map { links =>
+    linkDAO.allForUser(req.identity).map { links =>
       val pickled = write[Seq[Link]](links)
       //      val pickeled = write[Seq[Int]](Seq(1, 2, 3))
       assert(implicitly[Reader[Link]] eq implicitly[Reader[Link]])
       Ok(pickled)
     }
   }
+
   def listFolders = silhouette.SecuredAction.async { implicit req =>
-    folderDAO.foldersForUser(req.identity).map { folders =>
+    folderDAO.allForUser(req.identity).map { folders =>
       val pickled = write[Seq[Folder]](folders)
       Ok(pickled)
     }
@@ -92,6 +122,6 @@ class Application @Inject()(
   }
 
   def guest() = silhouette.UnsecuredAction { implicit req =>
-    Ok(views.html.index(NewLinkForm.form, None))
+    Ok(views.html.index(NewLinkForm.form, NewFolderForm.form, None))
   }
 }

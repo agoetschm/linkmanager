@@ -7,7 +7,9 @@ GET         /                                 controllers.Application.index
 GET         /listLinks                        controllers.Application.listLinks
 GET         /listFolders                      controllers.Application.listFolders
 POST        /addLink                          controllers.Application.addLink
+POST        /addFolder                        controllers.Application.addFolder
 GET         /deleteLink/:id                   controllers.Application.deleteLink(id: Long)
+GET         /deleteFolder/:id                 controllers.Application.deleteFolder(id: Long)
 
 GET         /login                            controllers.LogIn.view
 GET         /guest                            controllers.Application.guest
