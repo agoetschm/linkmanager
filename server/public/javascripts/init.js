@@ -2,8 +2,7 @@ if (window.console) {
     console.log("Welcome to your Play application's JavaScript!");
 }
 (function ($) {
-    $(function () {
-
+    $(function () {        
         $('.button-collapse').sideNav();
 
         $(".dropdown-button").dropdown({hover: true, belowOrigin: true});
@@ -17,6 +16,12 @@ if (window.console) {
 
 function Modal() {
 }
-Modal.confirmDeleteLink = function (modalId) {
+Modal.confirmDelete = function (modalId) {
     $("#" + modalId).modal("open");
+};
+
+function Collapsible() {
+}
+Collapsible.activate = function () {
+    $(".collapsible").collapsible();
 };

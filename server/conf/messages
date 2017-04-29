@@ -33,16 +33,19 @@ link.link = Link
 link.description = Description
 
 # Delete link
+delete.folder.modal = Delete this folder and its content?
 delete.link.modal = Delete this link?
 delete.link.confirm = Confirm
 delete.link.cancel = Cancel
 
-# New link form
+# New link/folder form
 new.link = New link
+new.folder = New folder
 link.url = URL
 link.name.optional = Name (optional)
 link.description.optional = Small description (optional)
 add.link = Add
+folder.name = Name
 
 # Log in form
 log.in.guest = Log in with a guest account
