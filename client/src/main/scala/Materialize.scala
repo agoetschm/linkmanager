@@ -1,11 +1,13 @@
 import scala.scalajs.js
 
 /**
-  * Javascript interface of Materialize (only what we use)
+  * Javascript interface of Materialize (only what we need)
   */
 @js.native
 object Materialize extends js.Object {
   def toast(msg: String, durationMs: Int): Unit = js.native
+
+  def updateTextFields(): Unit = js.native
 }
 
 @js.native

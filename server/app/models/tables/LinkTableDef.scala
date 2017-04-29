@@ -27,7 +27,7 @@ class LinkTableDef(tag: Tag) extends Table[Link](tag, "links") {
   private val folders = TableQuery[FolderTableDef]
 
   def folder = foreignKey("folder_fk", maybeParent, folders)(_.id.?,
-    onUpdate = ForeignKeyAction.Restrict, onDelete = ForeignKeyAction.SetNull)
+    onUpdate = ForeignKeyAction.Restrict, onDelete = ForeignKeyAction.Cascade)
 
 
   override def * =

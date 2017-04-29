@@ -1,59 +1,59 @@
 @import utils.Location
 @(location: Location, maybeUser: Option[User])(implicit messages: Messages)
 
-@import utils.SignUp
-@import utils.LogIn
-@import utils.Home
+    @import utils.SignUp
+    @import utils.LogIn
+    @import utils.Home
 
-@menu(sideNav: Boolean) = @{
-    maybeUser match {
-        case Some(user) => {
-            if(location == Home)
-                <li class="active"><a href='/'>{Messages("home")}</a></li>
-            else
-                <li><a href='/'>{Messages("home")}</a></li>
-        } ++ {
-            if(sideNav)
-                <li><div class="divider"></div></li>
-                <li><a class="subheader">{user.username}</a></li>
-                <li><a href='/password/change'>{Messages("change.password")}</a></li>
-                <li><a href='/logout'>{Messages("log.out")}</a></li>
-            else
-                <li>
-                <a class="dropdown-button" href="#!" data-activates="logout-dropdown">
-                {user.username}<i class="material-icons right">arrow_drop_down</i>
-                </a>
-                <ul id="logout-dropdown" class="dropdown-content">
-                <li><a href='/password/change'>{Messages("change.password")}</a></li>
-                <li><a href='/logout'>{Messages("log.out")}</a></li>
-                </ul>
-                </li>
-        }
+    @menu(sideNav: Boolean) = @{
+        maybeUser match {
+            case Some(user) => {
+                if(location == Home)
+                    <li class="active"><a href='/'>{Messages("home")}</a></li>
+                else
+                    <li><a href='/'>{Messages("home")}</a></li>
+            } ++ {
+                if(sideNav)
+                    <li><div class="divider"></div></li>
+                    <li><a class="subheader">{user.username}</a></li>
+                    <li><a href='/password/change'>{Messages("change.password")}</a></li>
+                    <li><a href='/logout'>{Messages("log.out")}</a></li>
+                else
+                    <li>
+                    <a class="dropdown-button" href="#!" data-activates="logout-dropdown">
+                    {user.username}<i class="material-icons right">arrow_drop_down</i>
+                    </a>
+                    <ul id="logout-dropdown" class="dropdown-content">
+                    <li><a href='/password/change'>{Messages("change.password")}</a></li>
+                    <li><a href='/logout'>{Messages("log.out")}</a></li>
+                    </ul>
+                    </li>
+            }
 
-        case None => {
-            if(location == SignUp)
-                <li class="active"><a href='/signup'>{Messages("sign.up")}</a></li>
-            else
-                <li><a href='/signup'>{Messages("sign.up")}</a></li>
-        } ++ {
-            if(location == LogIn)
-                <li class="active"><a href='/login'>{Messages("log.in")}</a></li>
-            else
-                <li><a href='/login'>{Messages("log.in")}</a></li>
+            case None => {
+                if(location == SignUp)
+                    <li class="active"><a href='/signup'>{Messages("sign.up")}</a></li>
+                else
+                    <li><a href='/signup'>{Messages("sign.up")}</a></li>
+            } ++ {
+                if(location == LogIn)
+                    <li class="active"><a href='/login'>{Messages("log.in")}</a></li>
+                else
+                    <li><a href='/login'>{Messages("log.in")}</a></li>
+            }
         }
     }
-}
 
-<nav>
-    <div class="nav-wrapper container">
-        <a href="/" class="brand-logo">@Messages("application.name")</a>
-        <a href="/" data-activates="mobile-nav" class="button-collapse">
-            <i class="material-icons">menu</i></a>
-        <ul class="side-nav" id="mobile-nav">
-        @menu(true)
-        </ul>
-        <ul class="right hide-on-med-and-down">
+    <nav>
+        <div class="nav-wrapper container">
+            <a href="/" class="brand-logo">@Messages("application.name")</a>
+            <a href="/" data-activates="mobile-nav" class="button-collapse">
+                <i class="material-icons">menu</i></a>
+            <ul class="side-nav" id="mobile-nav">
+            @menu(true)
+            </ul>
+            <ul class="right hide-on-med-and-down">
             @menu(false)
-        </ul>
-    </div>
-</nav>
+            </ul>
+        </div>
+    </nav>

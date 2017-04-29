@@ -21,6 +21,9 @@ object MainApp extends JSApp {
   var linkDAO: DAO[Link] = _
   var folderDAO: DAO[Folder] = _
 
+  var actLocation: Option[Folder] = None
+  val paths: mutable.Map[Entity, List[Folder]] = new mutable.HashMap
+
   @JSExport
   override def main(): Unit = {
     if (jQuery("#guest").length != 0) {
@@ -31,7 +34,7 @@ object MainApp extends JSApp {
       linkDAO = LinkDAOBackendImpl
       folderDAO = FolderDAOBackendImpl
     }
-    
+
     if (jQuery("#links-collection").length != 0)
       loadLinks()
     if (jQuery("#new-link-form").length != 0)
@@ -44,7 +47,6 @@ object MainApp extends JSApp {
       e.preventDefault() // prevent reload
       postNewLink()
     }
-
     val folderForm = jQuery("#new-folder-form")
     folderForm.submit { (e: JQueryEventObject) =>
       e.preventDefault() // prevent reload
@@ -83,15 +85,21 @@ object MainApp extends JSApp {
 
         val tree: Node = buildTree(None)
 
-        def deleteFolderId(f: Folder) = "deleteFolder" + f.id
+        def deleteId(e: Entity) = e match {
+          case f: Folder => "deleteFolder" + f.id
+          case l: Link => "deleteLink" + l.id
+        }
 
-        def deleteLinkId(l: Link) = "deleteLink" + l.id
+        def openCloseId(e: Entity) = e match {
+          case f: Folder => "openCloseFolder" + f.id
+          case l: Link => "openCloseLink" + l.id
+        }
 
         def treeToView(node: Node): String =
           if (node.value.isDefined)
             node.value.map {
               case f: Folder =>
-                li(raw(div(`class` := "collapsible-header",
+                li(raw(div(id := openCloseId(f), `class` := "collapsible-header",
                   raw(i(`class` := "material-icons", "folder") + node.value.get.name))
                   + div(`class` := "collapsible-body", raw(
                   (if (node.children.nonEmpty)
@@ -101,11 +109,11 @@ object MainApp extends JSApp {
                     i("Empty folder"))
                     + div(`class` := "row no-margin-bottom",
                     div(`class` := "col s12 center",
-                      a(id := deleteFolderId(f), `class` := "btn-flat waves-light", href := "#!",
+                      a(id := deleteId(f), `class` := "btn-flat waves-light", href := "#!",
                         i(`class` := "material-icons", "delete")))).render)).render)).render
 
               case l: Link =>
-                li(raw(div(`class` := "collapsible-header",
+                li(raw(div(id := openCloseId(l), `class` := "collapsible-header",
                   raw(i(`class` := "material-icons", "link") + node.value.get.name))
                   + div(`class` := "collapsible-body",
                   raw((if (l.description.isDefined) p(l.description.get) else "") +
@@ -115,34 +123,90 @@ object MainApp extends JSApp {
                           i(`class` := "material-icons", "open_in_browser")))
                         +
                         div(`class` := "col s6 m3 center",
-                          a(id := deleteLinkId(l), href := "#!", `class` := "btn-flat waves-light",
+                          a(id := deleteId(l), href := "#!", `class` := "btn-flat waves-light",
                             i(`class` := "material-icons", "delete"))).render)).render)
                 ).render)).render
             }.get
           else
             node.children.map(treeToView).reduce(_ + _)
-
-
+        
+        // display view
         val collection = jQuery("#links-collection")
         collection.empty()
         collection.append(treeToView(tree))
+        
+        // build paths for folders
+        def buildPath(node: Node, acc: List[Folder]): Unit =
+          node.value match {
+            case Some(folder: Folder) =>
+              paths.put(folder, acc :+ folder)
+              node.children.foreach(buildPath(_, acc :+ folder))
+            case Some(link: Link) => paths.put(link, acc)
+            case _ => node.children.foreach(buildPath(_, List()))
+          }
 
-        // delete listeners
+        buildPath(tree, List())
+
+        // delete an open/close listeners
         links.foreach { l =>
           val deleteListener: JQueryEventObject => Unit = { e: JQueryEventObject => deleteLink(l) }
-          jQuery("#" + deleteLinkId(l)).click(deleteListener)
+          jQuery("#" + deleteId(l)).click(deleteListener)
+          val openCloseListener: JQueryEventObject => Unit = { e: JQueryEventObject => openClose(l) }
+          jQuery("#" + openCloseId(l)).click(openCloseListener)
         }
         folders.foreach { f =>
           val deleteListener: JQueryEventObject => Unit = { e: JQueryEventObject => deleteFolder(f) }
-          jQuery("#" + deleteFolderId(f)).click(deleteListener)
+          jQuery("#" + deleteId(f)).click(deleteListener)
+          val openCloseListener: JQueryEventObject => Unit = { e: JQueryEventObject => openClose(f) }
+          jQuery("#" + openCloseId(f)).click(openCloseListener)
         }
 
         // activate collapsible
         Collapsible.activate()
-        
+
+        // update location path
+        actLocation = None
+        updateLocationView()
+
         // TODO twirl in client https://medium.com/@muuki88/finch-scala-js-twirl-templates-b46d2123ea78#.lc3d90joj
       }
     }
+  }
+
+  // called when a folder or link is clicked
+  def openClose(entity: Entity): Unit = {
+    entity match {
+      case f: Folder =>
+        val oldLocation = actLocation
+        actLocation = Some(f)
+        // test if we are closing a folder
+        if (oldLocation.isDefined) {
+          val path = paths.getOrElse(oldLocation.get, List())
+          val index = path.indexOf(f)
+          if (index != -1)
+            actLocation = if (index > 0) Some(path(index - 1)) else None
+        }
+      case l: Link =>
+        l.parentId match {
+          case None => actLocation = None
+          case Some(parentId) =>
+            val path = paths.getOrElse(l, List())
+            val parentIndex = path.indexWhere(_.id == parentId)
+            if (parentIndex != -1)
+              actLocation = Some(path(parentIndex))
+        }
+    }
+    updateLocationView()
+  }
+
+  // updates the location field in the form from actLocation
+  def updateLocationView(): Unit = {
+    val locationStr =
+      if (actLocation.isDefined)
+        paths.getOrElse(actLocation.get, List()).map(_.name)
+          .foldLeft("/") { case (acc, next) => acc + next + "/" }
+      else "/"
+    jQuery(".location-field").value(locationStr)
   }
 
   def postNewLink(): Unit = {
@@ -164,6 +228,7 @@ object MainApp extends JSApp {
       )
       // reset form and reload links
       jQuery("#new-link-form").trigger("reset")
+      Materialize.updateTextFields()
       loadLinks()
     }
   }
@@ -186,6 +251,7 @@ object MainApp extends JSApp {
       )
       // reset form and reload links
       jQuery("#new-folder-form").trigger("reset")
+      Materialize.updateTextFields()
       loadLinks()
     }
   }
@@ -326,7 +392,13 @@ object MainApp extends JSApp {
 
     override def post(formId: String) = {
       val p = Promise[RequestResult]()
-      ajax("/addLink", "POST", Some(jQuery("#" + formId).serialize()),
+      ajax("/addLink", "POST", Some {
+        jQuery("#" + formId).serialize() + {
+          if (actLocation.isDefined)
+            "&parentId=" + String.valueOf(actLocation.get.id)
+          else ""
+        }
+      },
         successHandler = jqXHR => {
           try p.success(read[RequestResult](jqXHR.responseText))
           catch {
@@ -373,14 +445,21 @@ object MainApp extends JSApp {
 
     override def post(formId: String) = {
       val p = Promise[RequestResult]()
-      ajax("/addFolder", "POST", Some(jQuery("#" + formId).serialize()),
+      ajax("/addFolder", "POST", Some {
+        jQuery("#" + formId).serialize() + {
+          if (actLocation.isDefined)
+            "&parentId=" + String.valueOf(actLocation.get.id)
+          else ""
+        }
+      },
         successHandler = jqXHR => {
           try p.success(read[RequestResult](jqXHR.responseText))
           catch {
             case e: Exception =>
               p.failure(UPickleException("failed to parse result of folder creation"))
           }
-        },
+        }
+        ,
         errorHandler = () => p.failure(AjaxException("failed to create a new foldercd SDocd"))
       )
       p.future
@@ -391,10 +470,10 @@ object MainApp extends JSApp {
     * Fake DAO for the guest user
     */
   object LinkDAOGuestImpl extends DAO[Link] {
-    var lastLinkId = 1L
     val guestLinks: mutable.HashMap[Long, Link] = mutable.HashMap()
     guestLinks.put(1L, Link(1L, 0L, "http://example.com", "Example", None, None))
     guestLinks.put(2L, Link(2L, 0L, "http://google.com", "google.com", Some("The Google search engine"), Some(1L)))
+    var lastLinkId = 2L
 
     override def getAll = Future.successful(guestLinks.values.toSeq)
 
@@ -412,7 +491,7 @@ object MainApp extends JSApp {
       val newLink = Link(lastLinkId, 0L, url,
         if (name.length > 0) name else url.replaceFirst("https?://", ""),
         if (description.length > 0) Some(description) else None,
-        None)
+        if (actLocation.isDefined) Some(actLocation.get.id) else None)
 
       guestLinks.put(lastLinkId, newLink)
       Future.successful(RequestResult(success = true))
@@ -438,7 +517,8 @@ object MainApp extends JSApp {
       val name = jQuery("#" + formId + " #name").value().toString
 
       lastFolderId += 1
-      val newFolder = Folder(lastFolderId, 0L, name, None)
+      val newFolder = Folder(lastFolderId, 0L, name,
+        if (actLocation.isDefined) Some(actLocation.get.id) else None)
 
       guestFolders.put(lastFolderId, newFolder)
       Future.successful(RequestResult(success = true))

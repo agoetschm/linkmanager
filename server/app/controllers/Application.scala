@@ -50,7 +50,7 @@ class Application @Inject()(
           url = successData.url,
           name = name,
           description = successData.description,
-          parentId = None)
+          parentId = successData.parentId)
         ) map {
           maybeNewId =>
             Logger.info("new link with id " + maybeNewId)
@@ -71,7 +71,7 @@ class Application @Inject()(
         folderDAO.add(Folder(id = 0,
           userId = req.identity.id,
           name = successData.name,
-          parentId = None)
+          parentId = successData.parentId)
         ) map {
           maybeNewId =>
             Logger.info("new folder with id " + maybeNewId)
